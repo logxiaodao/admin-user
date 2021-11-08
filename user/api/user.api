@@ -1,0 +1,42 @@
+// 版本
+syntax = "v1"
+
+info(
+	title: "用户登陆"
+	desc: "用户登陆功能"
+	author: "龙祥君"
+	email: "longxiangjun@laihua.com"
+	version: "v2.1.1"
+)
+
+import "api/account.api"
+import "api/api.api"
+import "api/admin.api"
+import "api/role.api"
+import "api/permission.api"
+
+// 登陆
+type (
+	LoginReq {
+		PlatformID uint   `json:"platformID"  valid:"range(1|2147483647),required" example:"1"`
+		Username   string `json:"username"  valid:"required" example:"root"`
+		Password   string `json:"password"  valid:"required" example:"123456"`
+	}
+
+	LoginRes {
+		Id           int64  `json:"id"`
+		Name         string `json:"name"`
+		PlatformID   int64  `json:"platformID"`
+		AccessToken  string `json:"accessToken"`
+		AccessExpire int64  `json:"accessExpire"`
+		RefreshAfter int64  `json:"refreshAfter"`
+	}
+)
+
+service user {
+	@doc (
+		summary: "登陆"
+	)
+	@handler login
+	post /v1/user/login (LoginReq) returns (LoginRes)
+}

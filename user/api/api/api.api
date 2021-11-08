@@ -1,0 +1,96 @@
+syntax = "v1"
+
+info(
+	title: "api管理"
+	desc: "系统api接口录入"
+	author: "龙祥君"
+	email: "longxiangjun@laihua.com"
+	version: "v1.1.1"
+)
+
+type (
+	GetApiReq {
+		CurrentPage int  `form:"currentPage" valid:"range(1|2147483647),required" example:"1"`
+		PageSize    int  `form:"pageSize" valid:"in(1|10|20|50|100),required" example:"10"`
+	}
+	GetApiRsp {
+		Total   int64     `json:"total"`
+		RowList []ApiList `json:"rowList"`
+	}
+	ApiList {
+		Id         uint   `json:"id"`
+		Name       string `json:"name"`
+		HttpMethod string `json:"httpMethod"`
+		HttpPath   string `json:"httpPath"`
+	}
+
+	FindApiByIdsReq {
+		Ids string `form:"ids"  valid:"required" example:"1,2,3"`
+	}
+	FindApiByIdsRsp {
+		DataList []ApiList `json:"dataList"`
+	}
+
+	PostApiReq {
+		PostApiList
+	}
+
+	BatchPostApiReq {
+		ItemList   []PostApiList `json:"itemList"`
+	}
+
+	PostApiList {
+		Name       string `json:"name" valid:"stringlength(1|255),required" example:"root"`
+		HttpMethod string `json:"httpMethod" valid:"in(GET|POST|PUT|DELETE),required" example:"get"`
+		HttpPath   string `json:"httpPath" valid:"stringlength(1|255),required" example:"/api"`
+	}
+
+	PutApiReq {
+		Id         uint   `json:"id" valid:"required,range(1|2147483647)" example:"1"`
+		Name       string `json:"name" valid:"stringlength(1|255),required" example:"root"`
+		HttpMethod string `json:"httpMethod" valid:"in(GET|POST|PUT|DELETE),required" example:"get"`
+		HttpPath   string `json:"httpPath" valid:"stringlength(1|255),required" example:"/api"`
+	}
+
+	DeleteApiReq {
+		IdList []uint `json:"idList" valid:"required" example:"1"`
+	}
+)
+
+@server(
+	jwt: Auth
+	middleware: Auth
+)
+
+service user {
+	@doc (
+		summary: "分页获取api信息"
+	)
+	@handler getApi
+	get     /v1/auth/api    		(GetApiReq)     	returns (GetApiRsp)
+	@doc (
+		summary: "使用id获取api信息"
+	)
+	@handler findApiByIdList
+	get     /v1/auth/findApiByIds(FindApiByIdsReq)   returns (FindApiByIdsRsp)
+	@doc (
+		summary: "添加api信息"
+	)
+	@handler postApi
+	post    /v1/auth/api    		(PostApiReq)    	returns ()
+	@doc (
+		summary: "批量添加api信息"
+	)
+	@handler batchPostApiReq
+	post    /v1/auth/batchApi    	(BatchPostApiReq)   returns ()
+	@doc (
+		summary: "修改api信息"
+	)
+	@handler putApi
+	put     /v1/auth/api    		(PutApiReq)     	returns ()
+	@doc (
+		summary: "删除api信息"
+	)
+	@handler deleteApi
+	delete  /v1/auth/api    		(DeleteApiReq)  	returns ()
+}

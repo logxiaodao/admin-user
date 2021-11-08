@@ -1,0 +1,312 @@
+syntax = "proto3";
+
+package user;
+
+// user
+// 登陆
+message LoginRequest {
+    string username = 1;
+    string password = 2;
+    int64 platformID = 3;
+
+}
+message LoginResponse {
+    string accessToken = 1;
+    int64 accessExpire = 2;
+    int64 refreshAfter = 3;
+    int64 id = 4;
+    int64 platformID = 5;
+    string name = 6;
+}
+
+// account
+// 退出登陆
+message LoginOutRequest {}
+message LoginOutResponse {
+    bool status = 1;
+}
+
+// 修改密码
+message UpdatePasswordRequest {
+    string oldPassword = 1;
+    string newPassword = 2;
+    string confirmPassword = 3;
+}
+message UpdatePasswordResponse {
+    bool status = 1;
+}
+
+// 接口权限校验
+message CheckPermissionRequest {
+    string httpMethod = 1;
+    string httpPath = 2;
+}
+message CheckPermissionResponse {
+    bool status = 1;
+}
+
+
+// admin
+message AdminInfo {
+    uint64 id = 1;
+    string account = 2;
+    string nickName = 3;
+    string phone = 4;
+    string email = 5;
+    string roleIds = 6;
+}
+
+// 分页获取管理员列表
+message GetAdminRequest {
+    int64 currentPage = 1;
+    int64 pageSize = 2;
+}
+message GetAdminResponse {
+    int64 total = 1;
+    repeated AdminInfo rowList = 2;
+}
+
+// 使用id列表来查询用户信息
+message FindAdminByIdsRequest {
+    string ids = 1;
+}
+message FindAdminByIdsResponse {
+    repeated AdminInfo dataList = 1;
+}
+
+// 添加用户
+message AddAdminRequest {
+    string password = 1;
+    string account = 2;
+    string nickName = 3;
+    string phone = 4;
+    string email = 5;
+    repeated uint64 roleIdList = 6;
+}
+message AddAdminResponse {
+    bool status = 1;
+}
+
+// 修改用户
+message EditAdminRequest {
+    uint64 id = 1;
+    string account = 2;
+    string nickName = 3;
+    string phone = 4;
+    string email = 5;
+    repeated uint64 roleIdList = 6;
+}
+message EditAdminResponse {
+    bool status = 1;
+}
+
+// 删除用户
+message DeleteAdminRequest {
+    repeated uint64 idList = 1;
+}
+message DeleteAdminResponse {
+    bool status = 1;
+}
+
+// role
+message RoleInfo {
+    uint64 id = 1;
+    string roleName = 2;
+    string permissionIds = 3;
+}
+
+// 分页获取角色列表
+message GetRoleRequest {
+    int64 currentPage = 1;
+    int64 pageSize = 2;
+}
+message GetRoleResponse {
+    int64 total = 1;
+    repeated RoleInfo rowList = 2;
+}
+
+// 使用id列表来查询角色信息
+message FindRoleByIdsRequest {
+    string ids = 1;
+}
+message FindRoleByIdsResponse {
+    repeated RoleInfo dataList = 1;
+}
+
+// 添加角色
+message AddRoleRequest {
+    string roleName = 1;
+    repeated uint64 permissionIdList = 2;
+}
+message AddRoleResponse {
+    bool status = 1;
+}
+
+// 修改角色
+message EditRoleRequest {
+    uint64 id = 1;
+    string roleName = 2;
+    repeated uint64 permissionIdList = 3;
+}
+message EditRoleResponse {
+    bool status = 1;
+}
+
+// 删除角色
+message DeleteRoleRequest {
+    repeated uint64 idList = 1;
+}
+message DeleteRoleResponse {
+    bool status = 1;
+}
+
+
+// permission
+message PermissionInfo {
+    uint64 id = 1;
+    string permissionName = 2;
+    string apiIds = 3;
+}
+
+// 分页获取权限列表
+message GetPermissionRequest {
+    int64 currentPage = 1;
+    int64 pageSize = 2;
+}
+message GetPermissionResponse {
+    int64 total = 1;
+    repeated PermissionInfo rowList = 2;
+}
+
+// 使用id列表来查询权限信息
+message FindPermissionByIdsRequest {
+    string ids = 1;
+}
+message FindPermissionByIdsResponse {
+    repeated PermissionInfo dataList = 1;
+}
+
+// 添加权限
+message AddPermissionRequest {
+    string permissionName = 1;
+    repeated uint64 apiIdList = 2;
+}
+message AddPermissionResponse {
+    bool status = 1;
+}
+
+// 修改权限
+message EditPermissionRequest {
+    uint64 id = 1;
+    string permissionName = 2;
+    repeated uint64 apiIdList = 3;
+}
+message EditPermissionResponse {
+    bool status = 1;
+}
+
+// 删除权限
+message DeletePermissionRequest {
+    repeated uint64 idList = 1;
+}
+message DeletePermissionResponse {
+    bool status = 1;
+}
+
+// api
+message ApiInfo {
+    uint64 id = 1;
+    string name = 2;
+    string httpMethod = 3;
+    string httpPath = 4;
+}
+
+// 分页获取api列表
+message GetApiRequest {
+    int64 currentPage = 1;
+    int64 pageSize = 2;
+}
+message GetApiResponse {
+    int64 total = 1;
+    repeated ApiInfo rowList = 2;
+}
+
+// 使用id列表来查询api信息
+message FindApiByIdsRequest {
+    string ids = 1;
+}
+message FindApiByIdsResponse {
+    repeated ApiInfo dataList = 1;
+}
+
+// 添加api
+message AddApiRequest {
+    string name = 1;
+    string httpMethod = 2;
+    string httpPath = 3;
+}
+message AddApiResponse {
+    bool status = 1;
+}
+
+// 批量添加api
+message AddBatchApiRequest {
+    repeated AddApiRequest itemList = 1;
+}
+message AddBatchApiResponse {
+    bool status = 1;
+}
+
+// 修改api
+message EditApiRequest {
+    uint64 id = 1;
+    string name = 2;
+    string httpMethod = 3;
+    string httpPath = 4;
+}
+
+message EditApiResponse {
+    bool status = 1;
+}
+
+// 删除api
+message DeleteApiRequest {
+    repeated uint64 idList = 1;
+}
+message DeleteApiResponse {
+    bool status = 1;
+}
+
+service User {
+    // user
+    rpc login(LoginRequest) returns (LoginResponse);
+    // account
+    rpc loginOut(LoginOutRequest) returns (LoginOutResponse);
+    rpc updatePassword(UpdatePasswordRequest) returns (UpdatePasswordResponse);
+    rpc checkPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
+    // admin
+    rpc getAdmin(GetAdminRequest) returns (GetAdminResponse);
+    rpc AddAdmin(AddAdminRequest) returns (AddAdminResponse);
+    rpc EditAdmin(EditAdminRequest) returns (EditAdminResponse);
+    rpc deleteAdmin(DeleteAdminRequest) returns (DeleteAdminResponse);
+    rpc findAdminByIds(FindAdminByIdsRequest) returns (FindAdminByIdsResponse);
+    // role
+    rpc getRole(GetRoleRequest) returns (GetRoleResponse);
+    rpc AddRole(AddRoleRequest) returns (AddRoleResponse);
+    rpc EditRole(EditRoleRequest) returns (EditRoleResponse);
+    rpc deleteRole(DeleteRoleRequest) returns (DeleteRoleResponse);
+    rpc FindRoleByIds(FindRoleByIdsRequest) returns (FindRoleByIdsResponse);
+    // permission
+    rpc getPermission(GetPermissionRequest) returns (GetPermissionResponse);
+    rpc AddPermission(AddPermissionRequest) returns (AddPermissionResponse);
+    rpc EditPermission(EditPermissionRequest) returns (EditPermissionResponse);
+    rpc deletePermission(DeletePermissionRequest) returns (DeletePermissionResponse);
+    rpc findPermissionByIds(FindPermissionByIdsRequest) returns (FindPermissionByIdsResponse);
+    // api
+    rpc getApi(GetApiRequest) returns (GetApiResponse);
+    rpc AddApi(AddApiRequest) returns (AddApiResponse);
+    rpc batchApi(AddBatchApiRequest) returns (AddBatchApiResponse);
+    rpc EditApi(EditApiRequest) returns (EditApiResponse);
+    rpc deleteApi(DeleteApiRequest) returns (DeleteApiResponse);
+    rpc findApiByIds(FindApiByIdsRequest) returns (FindApiByIdsResponse);
+}

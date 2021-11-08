@@ -1,0 +1,1464 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "用户登陆",
+    "description": "用户登陆功能",
+    "version": "v2.1.1"
+  },
+  "host": "127.0.0.1",
+  "basePath": "/api",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/account/checkPermission": {
+      "post": {
+        "summary": "api接口权限检验",
+        "operationId": "checkPermission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CheckPermissionReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/account/loginOut": {
+      "post": {
+        "summary": "退出登陆",
+        "operationId": "loginOut",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/account/updatePassword": {
+      "post": {
+        "summary": "修改密码",
+        "operationId": "updatePassword",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdatePasswordReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/auth/FindAdminByIds": {
+      "get": {
+        "summary": "使用id获取管理员列表信息",
+        "operationId": "FindAdminByIds",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FindAdminByIdsRsp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "1",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/auth/FindPermissionByIds": {
+      "get": {
+        "summary": "使用id获取管理员权限信息",
+        "operationId": "FindPermissionByIds",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FindPermissionByIdsRsp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "1",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/auth/FindRoleByIds": {
+      "get": {
+        "summary": "使用id获取管理员角色列表信息",
+        "operationId": "FindRoleByIds",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FindRoleByIdsRsp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "1",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/auth/admin": {
+      "get": {
+        "summary": "分页获取管理员列表信息",
+        "operationId": "getAdmin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetAdminRsp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "1",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "10",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "delete": {
+        "summary": "删除管理员用户",
+        "operationId": "deleteAdmin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteAdminReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "post": {
+        "summary": "添加管理员用户",
+        "operationId": "postAdmin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostAdminReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "put": {
+        "summary": "修改管理员用户",
+        "operationId": "putAdmin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PutAdminReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/auth/api": {
+      "get": {
+        "summary": "分页获取api信息",
+        "operationId": "getApi",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetApiRsp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "1",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "10",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "delete": {
+        "summary": "删除api信息",
+        "operationId": "deleteApi",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteApiReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "post": {
+        "summary": "添加api信息",
+        "operationId": "postApi",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostApiReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "put": {
+        "summary": "修改api信息",
+        "operationId": "putApi",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PutApiReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/auth/batchApi": {
+      "post": {
+        "summary": "批量添加api信息",
+        "operationId": "batchPostApiReq",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BatchPostApiReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/auth/findApiByIds": {
+      "get": {
+        "summary": "使用id获取api信息",
+        "operationId": "findApiByIdList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/FindApiByIdsRsp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "1",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/auth/permission": {
+      "get": {
+        "summary": "分页获取管理员权限信息",
+        "operationId": "getPermission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetPermissionRsp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "1",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "10",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "delete": {
+        "summary": "删除管理员权限信息",
+        "operationId": "deletePermission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeletePermissionReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "post": {
+        "summary": "添加管理员权限信息",
+        "operationId": "postPermission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostPermissionReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "put": {
+        "summary": "修改管理员权限信息",
+        "operationId": "putPermission",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PutPermissionReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/auth/role": {
+      "get": {
+        "summary": "分页获取管理员角色列表信息",
+        "operationId": "getRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/GetRoleRsp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "1",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "10",
+            "in": "query",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "delete": {
+        "summary": "删除管理员角色",
+        "operationId": "deleteRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeleteRoleReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "post": {
+        "summary": "添加管理员角色",
+        "operationId": "postRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostRoleReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      },
+      "put": {
+        "summary": "修改管理员角色",
+        "operationId": "putRole",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {}
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PutRoleReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    },
+    "/v1/user/login": {
+      "post": {
+        "summary": "登陆",
+        "operationId": "login",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/LoginRes"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LoginReq"
+            }
+          }
+        ],
+        "tags": [
+          "user"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AdminList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "account": {
+          "type": "string"
+        },
+        "nickName": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "roleIds": {
+          "type": "string"
+        }
+      },
+      "title": "AdminList",
+      "required": [
+        "id",
+        "account",
+        "nickName",
+        "phone",
+        "email",
+        "roleIds"
+      ]
+    },
+    "ApiList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "name": {
+          "type": "string"
+        },
+        "httpMethod": {
+          "type": "string"
+        },
+        "httpPath": {
+          "type": "string"
+        }
+      },
+      "title": "ApiList",
+      "required": [
+        "id",
+        "name",
+        "httpMethod",
+        "httpPath"
+      ]
+    },
+    "BatchPostApiReq": {
+      "type": "object",
+      "properties": {
+        "itemList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PostApiList"
+          }
+        }
+      },
+      "title": "BatchPostApiReq",
+      "required": [
+        "itemList"
+      ]
+    },
+    "CheckPermissionReq": {
+      "type": "object",
+      "properties": {
+        "httpMethod": {
+          "type": "string"
+        },
+        "httpPath": {
+          "type": "string"
+        }
+      },
+      "title": "CheckPermissionReq",
+      "required": [
+        "httpMethod",
+        "in(GET|POST|PUT|DELETE)",
+        "get",
+        "httpPath",
+        "stringlength(1|255)",
+        "/api"
+      ]
+    },
+    "DeleteAdminReq": {
+      "type": "object",
+      "properties": {
+        "idList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "DeleteAdminReq",
+      "required": [
+        "idList",
+        "1"
+      ]
+    },
+    "DeleteApiReq": {
+      "type": "object",
+      "properties": {
+        "idList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "DeleteApiReq",
+      "required": [
+        "idList",
+        "1"
+      ]
+    },
+    "DeletePermissionReq": {
+      "type": "object",
+      "properties": {
+        "idList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "DeletePermissionReq",
+      "required": [
+        "idList",
+        "[1"
+      ]
+    },
+    "DeleteRoleReq": {
+      "type": "object",
+      "properties": {
+        "idList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "DeleteRoleReq",
+      "required": [
+        "idList",
+        "[1"
+      ]
+    },
+    "FindAdminByIdsReq": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "string"
+        }
+      },
+      "title": "FindAdminByIdsReq",
+      "required": [
+        "ids",
+        "1"
+      ]
+    },
+    "FindAdminByIdsRsp": {
+      "type": "object",
+      "properties": {
+        "dataList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AdminList"
+          }
+        }
+      },
+      "title": "FindAdminByIdsRsp",
+      "required": [
+        "dataList"
+      ]
+    },
+    "FindApiByIdsReq": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "string"
+        }
+      },
+      "title": "FindApiByIdsReq",
+      "required": [
+        "ids",
+        "1"
+      ]
+    },
+    "FindApiByIdsRsp": {
+      "type": "object",
+      "properties": {
+        "dataList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApiList"
+          }
+        }
+      },
+      "title": "FindApiByIdsRsp",
+      "required": [
+        "dataList"
+      ]
+    },
+    "FindPermissionByIdsReq": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "string"
+        }
+      },
+      "title": "FindPermissionByIdsReq",
+      "required": [
+        "ids",
+        "1"
+      ]
+    },
+    "FindPermissionByIdsRsp": {
+      "type": "object",
+      "properties": {
+        "dataList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PermissionList"
+          }
+        }
+      },
+      "title": "FindPermissionByIdsRsp",
+      "required": [
+        "dataList"
+      ]
+    },
+    "FindRoleByIdsReq": {
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "string"
+        }
+      },
+      "title": "FindRoleByIdsReq",
+      "required": [
+        "ids",
+        "1"
+      ]
+    },
+    "FindRoleByIdsRsp": {
+      "type": "object",
+      "properties": {
+        "dataList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleList"
+          }
+        }
+      },
+      "title": "FindRoleByIdsRsp",
+      "required": [
+        "dataList"
+      ]
+    },
+    "GetAdminReq": {
+      "type": "object",
+      "properties": {
+        "currentPage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GetAdminReq",
+      "required": [
+        "currentPage",
+        "range(1|2147483647)",
+        "1",
+        "pageSize",
+        "in(1|10|20|50|100)",
+        "10"
+      ]
+    },
+    "GetAdminRsp": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "rowList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AdminList"
+          }
+        }
+      },
+      "title": "GetAdminRsp",
+      "required": [
+        "total",
+        "rowList"
+      ]
+    },
+    "GetApiReq": {
+      "type": "object",
+      "properties": {
+        "currentPage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GetApiReq",
+      "required": [
+        "currentPage",
+        "range(1|2147483647)",
+        "1",
+        "pageSize",
+        "in(1|10|20|50|100)",
+        "10"
+      ]
+    },
+    "GetApiRsp": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "rowList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApiList"
+          }
+        }
+      },
+      "title": "GetApiRsp",
+      "required": [
+        "total",
+        "rowList"
+      ]
+    },
+    "GetPermissionReq": {
+      "type": "object",
+      "properties": {
+        "currentPage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GetPermissionReq",
+      "required": [
+        "currentPage",
+        "range(1|2147483647)",
+        "1",
+        "pageSize",
+        "in(1|10|20|50|100)",
+        "10"
+      ]
+    },
+    "GetPermissionRsp": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "rowList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PermissionList"
+          }
+        }
+      },
+      "title": "GetPermissionRsp",
+      "required": [
+        "total",
+        "rowList"
+      ]
+    },
+    "GetRoleReq": {
+      "type": "object",
+      "properties": {
+        "currentPage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "title": "GetRoleReq",
+      "required": [
+        "currentPage",
+        "range(1|2147483647)",
+        "1",
+        "pageSize",
+        "in(1|10|20|50|100)",
+        "10"
+      ]
+    },
+    "GetRoleRsp": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "rowList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RoleList"
+          }
+        }
+      },
+      "title": "GetRoleRsp",
+      "required": [
+        "total",
+        "rowList"
+      ]
+    },
+    "LoginReq": {
+      "type": "object",
+      "properties": {
+        "platformID": {
+          "$ref": "#/definitions/uint"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "title": "LoginReq",
+      "required": [
+        "platformID",
+        "range(1|2147483647)",
+        "1",
+        "username",
+        "root",
+        "password",
+        "123456"
+      ]
+    },
+    "LoginRes": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "platformID": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "accessToken": {
+          "type": "string"
+        },
+        "accessExpire": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "refreshAfter": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "title": "LoginRes",
+      "required": [
+        "id",
+        "name",
+        "platformID",
+        "accessToken",
+        "accessExpire",
+        "refreshAfter"
+      ]
+    },
+    "PermissionList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "permissionName": {
+          "type": "string"
+        },
+        "apiIds": {
+          "type": "string"
+        }
+      },
+      "title": "PermissionList",
+      "required": [
+        "id",
+        "permissionName",
+        "apiIds"
+      ]
+    },
+    "PostAdminReq": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "nickName": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "roleIdList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "PostAdminReq",
+      "required": [
+        "account",
+        "stringlength(1|255)",
+        "root",
+        "password",
+        "12345678",
+        "nickName",
+        "phone",
+        "stringlength(1|20)",
+        "18598814577",
+        "email",
+        "1212231@qq.com",
+        "roleIdList",
+        "[1"
+      ]
+    },
+    "PostApiList": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "httpMethod": {
+          "type": "string"
+        },
+        "httpPath": {
+          "type": "string"
+        }
+      },
+      "title": "PostApiList",
+      "required": [
+        "name",
+        "stringlength(1|255)",
+        "root",
+        "httpMethod",
+        "in(GET|POST|PUT|DELETE)",
+        "get",
+        "httpPath",
+        "/api"
+      ]
+    },
+    "PostApiReq": {
+      "type": "object",
+      "properties": {
+        "": {
+          "$ref": "#/definitions/PostApiList"
+        }
+      },
+      "title": "PostApiReq"
+    },
+    "PostPermissionReq": {
+      "type": "object",
+      "properties": {
+        "permissionName": {
+          "type": "string"
+        },
+        "apiIdList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "PostPermissionReq",
+      "required": [
+        "permissionName",
+        "stringlength(1|255)",
+        "产品",
+        "apiIdList",
+        "[1"
+      ]
+    },
+    "PostRoleReq": {
+      "type": "object",
+      "properties": {
+        "roleName": {
+          "type": "string"
+        },
+        "permissionIdList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "PostRoleReq",
+      "required": [
+        "roleName",
+        "stringlength(1|50)",
+        "产品",
+        "permissionIdList",
+        "[1"
+      ]
+    },
+    "PutAdminReq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "account": {
+          "type": "string"
+        },
+        "nickName": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "roleIdList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "PutAdminReq",
+      "required": [
+        "id",
+        "range(1|2147483647)",
+        "1",
+        "account",
+        "stringlength(1|255)",
+        "root",
+        "nickName",
+        "phone",
+        "stringlength(1|20)",
+        "18598814577",
+        "email",
+        "1212231@qq.com",
+        "roleIdList",
+        "[1"
+      ]
+    },
+    "PutApiReq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "name": {
+          "type": "string"
+        },
+        "httpMethod": {
+          "type": "string"
+        },
+        "httpPath": {
+          "type": "string"
+        }
+      },
+      "title": "PutApiReq",
+      "required": [
+        "id",
+        "required",
+        "1",
+        "name",
+        "stringlength(1|255)",
+        "root",
+        "httpMethod",
+        "in(GET|POST|PUT|DELETE)",
+        "get",
+        "httpPath",
+        "/api"
+      ]
+    },
+    "PutPermissionReq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "permissionName": {
+          "type": "string"
+        },
+        "apiIdList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "PutPermissionReq",
+      "required": [
+        "id",
+        "range(1|2147483647)",
+        "1",
+        "permissionName",
+        "stringlength(1|255)",
+        "产品",
+        "apiIdList",
+        "[1"
+      ]
+    },
+    "PutRoleReq": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "roleName": {
+          "type": "string"
+        },
+        "permissionIdList": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/uint"
+          }
+        }
+      },
+      "title": "PutRoleReq",
+      "required": [
+        "id",
+        "range(1|2147483647)",
+        "1",
+        "roleName",
+        "stringlength(1|50)",
+        "产品",
+        "permissionIdList",
+        "[1"
+      ]
+    },
+    "RoleList": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/uint"
+        },
+        "roleName": {
+          "type": "string"
+        },
+        "permissionIds": {
+          "type": "string"
+        }
+      },
+      "title": "RoleList",
+      "required": [
+        "id",
+        "roleName",
+        "permissionIds"
+      ]
+    },
+    "UpdatePasswordReq": {
+      "type": "object",
+      "properties": {
+        "oldPassword": {
+          "type": "string"
+        },
+        "newPassword": {
+          "type": "string"
+        },
+        "confirmPassword": {
+          "type": "string"
+        }
+      },
+      "title": "UpdatePasswordReq",
+      "required": [
+        "oldPassword",
+        "required",
+        "12345678",
+        "newPassword",
+        "confirmPassword"
+      ]
+    }
+  },
+  "securityDefinitions": {
+    "apiKey": {
+      "type": "apiKey",
+      "description": "Enter JWT Bearer token **_only_**",
+      "name": "Authorization",
+      "in": "header"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+syntax = "v1"
+
+info(
+    title: "账户管理"
+    desc: "账户管理"
+    author: "龙祥君"
+    email: "longxiangjun@laihua.com"
+    version: "v1.1.1"
+)
+
+
+type (
+    UpdatePasswordReq{
+        OldPassword   		string `json:"oldPassword"  valid:"required,stringlength(8|16)" example:"12345678"`
+        NewPassword   		string `json:"newPassword"  valid:"required,stringlength(8|16)" example:"12345678"`
+        ConfirmPassword   	string `json:"confirmPassword"  valid:"required,stringlength(8|16)" example:"12345678"`
+    }
+    CheckPermissionReq{
+        HttpMethod string `json:"httpMethod" valid:"in(GET|POST|PUT|DELETE),required" example:"get"`
+        HttpPath   string `json:"httpPath" valid:"stringlength(1|255),required" example:"/api"`
+    }
+
+)
+
+@server(
+    jwt: Auth
+    middleware: Auth
+)
+
+service user {
+    @doc (
+        summary: "退出登陆"
+    )
+    @handler loginOut
+    post /v1/account/loginOut () returns ()
+    @doc (
+        summary: "修改密码"
+    )
+    @handler updatePassword
+    post /v1/account/updatePassword (UpdatePasswordReq) returns ()
+    @doc (
+        summary: "api接口权限检验"
+    )
+    @handler checkPermission
+    post /v1/account/checkPermission (CheckPermissionReq) returns ()
+}
