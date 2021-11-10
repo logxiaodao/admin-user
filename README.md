@@ -1,14 +1,12 @@
 ## 1.背景说明
 > 本服使用go-zero框架,go-zero 是一个集成了各种工程实践的 web 和 rpc 框架。通过弹性设计保障了大并发服务端的稳定性，经受了充分的实战检验。
-### 1.1 安装依赖
+### 1.1 安装依赖 
 ```
 $ 预先需安装服务
 $ mysql(关系型数据库)、redis(key-value数据库[缓存])、etcd(key-value数据库[服务发现])
 $
 $ 建议使用homebrew或者docker管理服务
-$ brew install --build-from-source etcd
-$ brew install --build-from-source mysql    这里mysql的数据默认会存放在reds里面
-$ brew install --build-from-source redis
+$ brew install --build-from-source etcd|mysql|redis
 $
 $ 选择性安装prometheus(监控告警工具),不用则需要注释配置里的Prometheus配置
 $ brew install --build-from-source prometheus
@@ -30,20 +28,17 @@ goctl文档: https://go-zero.dev/cn/goctl-commands.html
 ##### 建议使用homebrew或者docker管理服务
 >  服务依赖安装: kafka(分布式发布订阅消息系统)、elasticsearch(全文搜索引擎)、kibana(es的可视化工具)、filebeat(轻量型日志采集器)
 ```
-$ brew install elastic/tap/elasticsearch-full
-$ brew install elastic/tap/kibana-full
-$ brew install elastic/tap/filebeat-full  需配置好filebeat.yml
-$ brew install --build-from-source zookeeper  kafka依赖zookeeper
-$ brew install --build-from-source kafka
+$ brew install elastic/tap/kibana-full | elastic/tap/filebeat-full | elastic/tap/elasticsearch-full
+$ 
+$ brew install --build-from-source zookeeper | kafka  kafka依赖zookeeper
 ```
 
 ##### homebrew 管理服务示例
 ```
-$ brew services kafka|other list|start|stop|restart|run|
+$ brew services list|start|stop|restart|run  kafka|other
 ```
 
 ##### go-stash 使用
-
 > 项目里面以及给大家在bin目录生成了可执行文件 stash
 并在user/api/etc/other目录初始化了config.yaml(go-stash使用)、filebeat.yaml(filebeat的配置)  
 
@@ -58,11 +53,9 @@ $ ./stash -f etc/config.yaml
 ### 1.3 启动对应的服务
 > 服务调用方式: rpc服务供api服务、内部其他服务调用 api服务供外部调用
 ```
-$ go run user/api/user.go -f user/api/etc/user.yaml
+$ go run api/user.go -f etc/dev.yaml
 $ 
-$ go run user/rpc/user.go -f user/rpc/etc/user.yaml
-$ 
-$ go run order/api/order.go -f order/api/etc/order.yaml
+$ go run rpc/user.go -f etc/user.yaml
 ```
 > 启动前先改好上面的配置文件
 

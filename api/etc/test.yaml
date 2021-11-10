@@ -1,0 +1,45 @@
+Name: user-api        # api服务名称
+Host: 0.0.0.0         # 地址
+Port: 8001            # 端口
+Mode: test
+Verbose: True        # 是否打印详细http请求日志
+MaxConns: 10000       # 每秒最大请求数
+MaxBytes: 1048576     # http可接受请求的最大ContentLength，默认1048576，被设置值不能必须在0到8388608之间
+Timeout: 3000         # 超时控制 单位:毫秒
+CpuThreshold: 900     # cpu降载阈值，默认900，可允许设置范围0到1000
+#CertFile:  # 证书文件
+#KeyFile:   # 私钥文件
+#Signature:  # 签名配置
+Mysql:
+  Name: laihua_user               # db name
+  Addr: common.ce2ukl4r6rjh.rds.cn-northwest-1.amazonaws.com.cn  # db 地址
+  UserName: laihua_admin          # 用户名
+  Password: "ChanyanbuLaihua"     # 密码
+  ShowLog: true                   # 是否打印SQL日志
+  MaxIdleConn: 10                 # 最大闲置的连接数
+  MaxOpenConn: 60                 # 最大打开的连接数
+  ConnMaxLifeTime: 60             # 连接重用的最大时间，单位分钟
+Redis: # 缓存
+  Addr: 172.24.0.2:6379
+  Password: "auth"
+  DB: 0
+  DialTimeOut: 60s
+  ReadTimeOut: 2s
+  WriteTimeOut: 2s
+  PoolTimeOut: 30s
+  PoolSize: 60
+Auth: # jwt 配置
+  AccessSecret: laihua-user-test  # jwt token的密钥
+  AccessExpire: 86400 # jwtToken 有效时间 单位：秒  ps：改这里记得改退出登陆和AuthMiddleware的逻辑（token黑名单key过期时间）
+Log: # 日志配置
+  ServiceName: user-api     # 服务名称
+  Mode: console             # 输出模式 console|file|volume
+  Path: user/api/logs       # 输出路径
+  Level: info               # 日志输出级别 info|error|severe
+  Compress: true            # 是否压缩 压缩文件为.gz
+  KeepDays: 30              # 日志保留天数
+  StackCooldownMillis: 100  # 日志输出间隔 单位:毫秒
+#Prometheus: # 服务指标监控
+#  Host: 0.0.0.0
+#  Port: 9091
+#  Path: /metrics

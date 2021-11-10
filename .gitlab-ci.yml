@@ -1,0 +1,78 @@
+image: docker:stable
+variables:
+  IMAGE_NAME: "admin-user"
+  IMAGE_TAG: "latest"
+  WEBHOOK_URL: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=d9e2313b-b176-41fc-a380-7941eda465a7"
+  TITLE: "admin-user测试环境更新"
+  CONTENT: ${CI_COMMIT_TITLE// /-}
+  VIEW_URL: "https://beta-admin.laihua.com/v2"
+  PIPELINES_URL: "https://gitlab.ilaihua.com/laihua-backend/admin-user/pipelines"
+  SUCCESS_INFORM_MOBILES: '"13266805464","15527385736"'
+  FAIL_INFORM_MOBILES: '"13266805464","15527385736"'
+  NOTIFICATION: "0"
+
+# 定义阶段的执行顺序 分为 3个阶段
+stages:
+  - stage-test
+  - stage-build
+  - stage-deploy
+  - stage-cleanup
+
+test_job:
+  stage: stage-test
+  tags:
+    - .gitlab-ci.yml
+  # only:
+  #   - uat
+  script:
+    - echo "开始单元测试..."
+    - echo "单元测试完成!"
+
+docker_job:
+  stage: stage-build
+  tags:
+    - laihua-perfoo-admin-runner
+  only:
+    # - uat
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^build.*/
+  script:
+    - echo "开始docker镜像构建..."
+    - login_register_cmd=`aws ecr get-login --region cn-northwest-1 | sed 's/-e none/''/g'`
+    - eval $login_register_cmd
+    - docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+    - docker tag $IMAGE_NAME:$IMAGE_TAG 551975756714.dkr.ecr.cn-northwest-1.amazonaws.com.cn/${IMAGE_NAME}:${IMAGE_TAG}
+    - docker push 551975756714.dkr.ecr.cn-northwest-1.amazonaws.com.cn/${IMAGE_NAME}:${IMAGE_TAG}
+    - echo "docker镜像构建完成!"
+
+#master_docker_job:
+#  stage: stage-build
+#  tags:
+#    - laihua-perfoo-admin-runner
+#  only:
+#    - master
+#  when: manual
+#  script:
+#    - echo "开始docker镜像构建..."
+#    - login_register_cmd=`aws ecr get-login --region cn-northwest-1 | sed 's/-e none/''/g'`
+#    - eval $login_register_cmd
+#    - VERSION=`cat package.json | jq '.version' | sed 's/\"//g'`
+#    - echo ${VERSION}
+#    - docker build -t 551975756714.dkr.ecr.cn-northwest-1.amazonaws.com.cn/${IMAGE_NAME}:${VERSION} .
+#    - docker push 551975756714.dkr.ecr.cn-northwest-1.amazonaws.com.cn/${IMAGE_NAME}:${VERSION}
+#    - echo "docker镜像构建完成!"
+
+deploy_job:
+  stage: stage-deploy
+  tags:
+    - laihua-perfoo-admin-runner
+  only:
+    # - uat
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /^build.*/
+  script:
+    - echo "开始测试服更新..."
+    - chmod +x ./bins/deploy.sh
+    - bash ./bins/deploy.sh ${IMAGE_NAME} ${IMAGE_TAG}
+    - if test ${NOTIFICATION} -eq 1;then sudo bash /var/www/gitlab-runner/notification_robot.sh "on_success" "${WEBHOOK_URL}" "${TITLE}" "${CONTENT}" "${GITLAB_USER_NAME}" "${CI_COMMIT_REF_NAME}" "${VIEW_URL}" "${PIPELINES_URL}" "${SUCCESS_INFORM_MOBILES}" "${FAIL_INFORM_MOBILES}";fi
+    - echo "测试服更新完成!"
