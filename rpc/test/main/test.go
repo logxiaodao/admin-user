@@ -39,7 +39,9 @@ func main() {
 
 	//data, err := c.UpdatePassword(context.Background(), &pb.UpdatePasswordRequest{OldPassword: "123456789", NewPassword: "12345678", ConfirmPassword: "12345678"})
 
-	data, err := c.CheckPermission(context.Background(), &user.CheckPermissionRequest{HttpPath: "/v1/auth/permission", HttpMethod: "POST"})
+	ctx := context.WithValue(context.Background(), "authorization", token)
+
+	data, err := c.CheckPermission(ctx, &user.CheckPermissionRequest{HttpPath: "/v1/auth/permission", HttpMethod: "POST"})
 
 	// api
 	//data, err := c.GetApi(context.Background(), &pb.GetApiRequest{CurrentPage: 1, PageSize: 10})

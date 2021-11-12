@@ -29,6 +29,13 @@ func (m *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
+		// 判读是否公共接口
+		for _, v := range config2.SecurityApiData {
+			if v.HTTPPath == r.RequestURI && v.HTTPMethod == r.Method {
+				next(w, r)
+			}
+		}
+
 		// 非超管不允许访问需要权限验证的接口
 		isSuperAdmin := util2.InterfaceToUint(r.Context().Value("isSuperAdmin"))
 		if isSuperAdmin != 1 {

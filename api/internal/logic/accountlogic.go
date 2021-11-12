@@ -3,6 +3,7 @@ package logic
 import (
 	errorx2 "admin-user/api/common/errorx"
 	safe2 "admin-user/api/common/safe"
+	"admin-user/api/internal/config"
 	util2 "admin-user/api/internal/pkg/util"
 	svc2 "admin-user/api/internal/svc"
 	types2 "admin-user/api/internal/types"
@@ -72,6 +73,13 @@ func (a *AccountLogic) CheckPermission(req types2.CheckPermissionReq) (rsp types
 
 	// 获取userId
 	userId := util2.InterfaceToUint(a.ctx.Value("userId"))
+
+	// 判读是否公共接口
+	for _, v := range config.SecurityApiData {
+		if v.HTTPPath == req.HttpPath && v.HTTPMethod == req.HttpMethod {
+			return types2.CheckPermissionRsp{IsPass: true}, nil
+		}
+	}
 
 	isPass, err := a.svcCtx.AccountRepository.CheckPermission(a.ctx, userId, req.HttpMethod, req.HttpPath)
 

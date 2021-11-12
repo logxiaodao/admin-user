@@ -108,7 +108,7 @@ func (a *accountRepository) CheckPermission(ctx context.Context, userId uint, ht
 	// 继续判断是不是对应接口平台下的超管
 	if adminUser.IsSuperAdmin == uint8(1) { // 管理每个平台的超管都拥有用户微服务的权限
 		err = db.Model(model2.AdminAPI{}).
-			Where(model2.AdminAPIColumns.PlatformID+" in ? ", []uint{adminUser.PlatformID, config2.InitRouteData.PlatformId}).
+			Where(model2.AdminAPIColumns.PlatformID+" in ? ", []uint{adminUser.PlatformID, uint(config2.InitRouteData.PlatformId)}).
 			Where(model2.AdminAPIColumns.HTTPPath+" = ? ", httpPath).
 			Where(model2.AdminAPIColumns.HTTPMethod+" = ? ", httpMethod).
 			Count(&total).Error

@@ -7,7 +7,6 @@ import (
 	util2 "admin-user/rpc/internal/pkg/util"
 	"context"
 	"github.com/dgrijalva/jwt-go"
-	"github.com/pkg/errors"
 	"google.golang.org/grpc/metadata"
 	"time"
 )
@@ -35,36 +34,42 @@ func NewToken(accessSecret string) Token {
 // GetToken 获取token
 func (t *token) GetToken(ctx context.Context) (string, error) {
 
-	incorrectToken, expiredToken := errorx2.CodeMessage[errorx2.IncorrectToken], errorx2.CodeMessage[errorx2.ExpiredToken]
-
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
-		return "", errors.New(incorrectToken.Error())
+		return "", errorx2.GetErrorByCode(errorx2.IncorrectToken)
+	}
+
+	tokenList, ok := md["authorization"]
+	if !ok || len(tokenList) == 0 {
+		return "", errorx2.GetErrorByCode(errorx2.IncorrectToken)
+	}
+
+	if tokenList[0][:7] == "Bearer " { // 去掉头部 Bearer
+		tokenList[0] = tokenList[0][7:]
 	}
 
 	dataSources := Initialization2.GetDataSource()
 	// 验证token是否在redis黑名单
-	if dataSources.RedisClient.SIsMember(config2.DefaultTokenRedisKey+":"+time.Now().Format("2006-01-02"), md.Get("authorization")[0]).Val() {
-		return "", errors.New(expiredToken.Error())
+	if dataSources.RedisClient.SIsMember(config2.DefaultTokenRedisKey+":"+time.Now().Format("2006-01-02"), tokenList[0]).Val() {
+		return "", errorx2.GetErrorByCode(errorx2.ExpiredToken)
 	}
 
-	return md.Get("authorization")[0], nil
+	return tokenList[0], nil
 }
 
 // ParseHS256Token 解密 jwt
 func (t *token) ParseHS256Token(tokenString string) (jwt.MapClaims, error) {
 
-	incorrectToken := errorx2.CodeMessage[errorx2.IncorrectToken]
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return []byte(t.AccessSecret), nil
 	})
 	if err != nil {
-		return nil, errors.New(incorrectToken.Error())
+		return nil, errorx2.GetErrorByCode(errorx2.IncorrectToken)
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, errors.New(incorrectToken.Error())
+		return nil, errorx2.GetErrorByCode(errorx2.IncorrectToken)
 	}
 
 	return claims, nil
@@ -85,7 +90,7 @@ func (t *token) GetTokenClaims(ctx context.Context) (jwt.MapClaims, error) {
 
 	if _, ok := userInfo["exp"]; ok {
 		if int64(util2.InterfaceToUint(userInfo["exp"])) < time.Now().Unix() {
-			return nil, errors.New("token has expired")
+			return nil, errorx2.GetErrorByCode(errorx2.ExpiredToken)
 		}
 	}
 
@@ -101,12 +106,11 @@ func (t *token) SetContext(ctx context.Context, isSuperAdmin bool) (newCtx conte
 
 	if isSuperAdmin {
 		// 拦截非超管
-		permissionDenied := errorx2.CodeMessage[errorx2.PermissionDenied]
 		if _, ok := userInfo["isSuperAdmin"]; !ok {
-			return nil, errors.New(permissionDenied.Error())
+			return nil, errorx2.GetErrorByCode(errorx2.PermissionDenied)
 		}
 		if util2.InterfaceToUint(userInfo["isSuperAdmin"]) != uint(1) {
-			return nil, errors.New(permissionDenied.Error())
+			return nil, errorx2.GetErrorByCode(errorx2.PermissionDenied)
 		}
 	}
 

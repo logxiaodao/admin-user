@@ -4,7 +4,6 @@
 package main
 
 import (
-	Initialization2 "admin-user/rpc/internal/Initialization"
 	config2 "admin-user/rpc/internal/config"
 	server2 "admin-user/rpc/internal/server"
 	svc2 "admin-user/rpc/internal/svc"
@@ -37,7 +36,7 @@ func main() {
 	logx.DisableStat()
 
 	// 初始化mysql默认数据
-	Initialization2.InitializationData()
+	//Initialization2.InitializationData()
 
 	fmt.Printf("Starting rpc server at %s...\n", c.ListenOn)
 	s.Start()

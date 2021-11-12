@@ -2,6 +2,7 @@ package logic
 
 import (
 	errorx2 "admin-user/rpc/common/errorx"
+	"admin-user/rpc/internal/config"
 	auth2 "admin-user/rpc/internal/pkg/auth"
 	util2 "admin-user/rpc/internal/pkg/util"
 	svc2 "admin-user/rpc/internal/svc"
@@ -32,10 +33,18 @@ func (l *CheckPermissionLogic) CheckPermission(in *user2.CheckPermissionRequest)
 	if err != nil {
 		return &user2.CheckPermissionResponse{Status: false}, err
 	}
+
 	// 获取userid
 	userId := util2.InterfaceToInt64(ctx.Value("userId"))
 	if userId == 0 {
 		return &user2.CheckPermissionResponse{Status: false}, errorx2.GetErrorByCode(errorx2.IncorrectToken)
+	}
+
+	// 判读是否公共接口
+	for _, v := range config.SecurityApiData {
+		if v.HTTPPath == in.HttpPath && v.HTTPMethod == in.HttpMethod {
+			return &user2.CheckPermissionResponse{Status: true}, nil
+		}
 	}
 
 	isPass, err := l.svcCtx.AccountRepository.CheckPermission(ctx, userId, in.HttpMethod, in.HttpPath)

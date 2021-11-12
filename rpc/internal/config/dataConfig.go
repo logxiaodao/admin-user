@@ -9,6 +9,7 @@ type InitDataConf struct {
 	InitAdminConf
 	InitPlatformConf
 	InitRouteConf
+	SecurityApiConf
 }
 
 // 定义数据格式
@@ -25,6 +26,10 @@ type (
 	// InitAdminConf 超级管理员初始化
 	InitAdminConf struct {
 		Data []AdminList
+	}
+	SecurityApiConf struct {
+		HTTPMethod string
+		HTTPPath   string
 	}
 	AdminList struct {
 		PlatformIds []int
@@ -213,5 +218,12 @@ var (
 				HTTPPath:   "/v1/account/checkPermission",
 			},
 		},
+	}
+
+	// SecurityApiData 只验证是否登陆，不验证用户
+	SecurityApiData = []SecurityApiConf{
+		{HTTPMethod: http.MethodPost, HTTPPath: "/v1/account/loginOut"},
+		{HTTPMethod: http.MethodPost, HTTPPath: "/v1/account/updatePassword"},
+		{HTTPMethod: http.MethodPost, HTTPPath: "/v1/account/checkPermission"},
 	}
 )

@@ -9,13 +9,14 @@ type InitDataConf struct {
 	InitAdminConf
 	InitPlatformConf
 	InitRouteConf
+	SecurityApiConf
 }
 
 // 定义数据格式
 type (
 	// InitRouteConf 路由初始化
 	InitRouteConf struct {
-		PlatformId uint
+		PlatformId int64
 		Data       []model2.AdminAPI
 	}
 	// InitPlatformConf 平台初始化
@@ -25,6 +26,10 @@ type (
 	// InitAdminConf 超级管理员初始化
 	InitAdminConf struct {
 		Data []AdminList
+	}
+	SecurityApiConf struct {
+		HTTPMethod string
+		HTTPPath   string
 	}
 	AdminList struct {
 		PlatformIds []int
@@ -49,7 +54,7 @@ var (
 		Data: []AdminList{
 			{
 				Account:  "lxj",
-				Password: "12345678",
+				Password: DefaultPassword,
 				NickName: "lxj",
 				Phone:    "18598814566",
 				Email:    "longxiangjun@laihua.com",
@@ -213,5 +218,12 @@ var (
 				HTTPPath:   "/v1/account/checkPermission",
 			},
 		},
+	}
+
+	// SecurityApiData 只验证是否登陆，不验证用户
+	SecurityApiData = []SecurityApiConf{
+		{HTTPMethod: http.MethodPost, HTTPPath: "/v1/account/loginOut"},
+		{HTTPMethod: http.MethodPost, HTTPPath: "/v1/account/updatePassword"},
+		{HTTPMethod: http.MethodPost, HTTPPath: "/v1/account/checkPermission"},
 	}
 )

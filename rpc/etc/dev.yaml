@@ -5,11 +5,13 @@ CpuThreshold: 900     # cpu降载阈值，默认900，可允许设置范围0到1
 # etcd 相关配置
 Etcd:
   Hosts:
-  - docker.for.mac.host.internal:2379
+#  - docker.for.mac.host.internal:2379
+  - 127.0.0.1:2379
   Key: user.rpc
 # redis 配置
 Redis:
-  Host: docker.for.mac.host.internal:6379  # 地址
+#  Host: docker.for.mac.host.internal:6379  # 地址
+  Host: 127.0.0.1:6379  # 地址
   Password: "123456"    # 密码
   DB: 0
   DialTimeOut: 60s
@@ -20,7 +22,8 @@ Redis:
 # mysql 配置
 Mysql:
   Name: laihua_user     # db name
-  Addr: docker.for.mac.host.internal:3306  # db 地址
+#  Addr: docker.for.mac.host.internal:3306  # db 地址
+  Addr: 127.0.0.1:3306  # db 地址
   UserName: root        # 用户名
   Password: "123456"      # 密码
   ShowLog: true         # 是否打印SQL日志
