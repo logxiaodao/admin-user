@@ -41,6 +41,7 @@ func (p *roleRepository) PagingQuery(ctx context.Context, req *user2.GetRoleRequ
 	db := p.db.WithContext(ctx)
 
 	var (
+		adminPermission        model2.AdminPermission
 		adminRole              model2.AdminRole
 		adminRoleHasPermission model2.AdminRoleHasPermission
 	)
@@ -52,6 +53,10 @@ func (p *roleRepository) PagingQuery(ctx context.Context, req *user2.GetRoleRequ
 	db = db.Table(adminRole.TableName()).
 		Where(adminRole.TableName()+"."+model2.AdminRoleColumns.PlatformID+" = ?", platformId)
 
+	if len(req.Keyword) > 0 {
+		db = db.Where(model2.AdminRoleColumns.RoleName + " like '" + req.Keyword + "%'")
+	}
+
 	err = db.Count(&rsp.Total).Error
 	if err != nil {
 		return
@@ -61,10 +66,16 @@ func (p *roleRepository) PagingQuery(ctx context.Context, req *user2.GetRoleRequ
 		"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.ID+") "+model2.AdminRoleColumns.ID,
 		"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.PlatformID+") "+model2.AdminRoleColumns.PlatformID,
 		"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.RoleName+") "+model2.AdminRoleColumns.RoleName,
-		"group_concat("+model2.AdminRoleHasPermissionColumns.PermissionID+") permission_ids").
+		"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.CreatedAt+") as createdat",
+		"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.UpdatedAt+") as updatedat",
+		"group_concat("+model2.AdminRoleHasPermissionColumns.PermissionID+") permission_ids",
+		"group_concat("+model2.AdminPermissionColumns.PermissionName+") permission_names").
 		Joins("left join `" + adminRoleHasPermission.TableName() + "` on " +
 			adminRole.TableName() + "." + model2.AdminRoleColumns.ID + " = " +
 			adminRoleHasPermission.TableName() + "." + model2.AdminRoleHasPermissionColumns.RoleID).
+		Joins("left join `" + adminPermission.TableName() + "` on " +
+			adminPermission.TableName() + "." + model2.AdminPermissionColumns.ID + " = " +
+			adminRoleHasPermission.TableName() + "." + model2.AdminRoleHasPermissionColumns.PermissionID).
 		Group(adminRole.TableName() + "." + model2.AdminRoleColumns.ID).
 		Scopes(PageDefault(int(req.CurrentPage), int(req.PageSize))).Find(&rsp.RowList).Error
 
@@ -77,6 +88,7 @@ func (p *roleRepository) FindRoleByIdList(ctx context.Context, idList []string) 
 	db := p.db.WithContext(ctx)
 
 	var (
+		adminPermission        model2.AdminPermission
 		adminRole              model2.AdminRole
 		adminRoleHasPermission model2.AdminRoleHasPermission
 	)
@@ -87,10 +99,16 @@ func (p *roleRepository) FindRoleByIdList(ctx context.Context, idList []string) 
 			"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.ID+") "+model2.AdminRoleColumns.ID,
 			"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.PlatformID+") "+model2.AdminRoleColumns.PlatformID,
 			"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.RoleName+") "+model2.AdminRoleColumns.RoleName,
-			"group_concat("+model2.AdminRoleHasPermissionColumns.PermissionID+") permission_ids").
+			"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.CreatedAt+") as createdat",
+			"any_value("+adminRole.TableName()+"."+model2.AdminRoleColumns.UpdatedAt+") as updatedat",
+			"group_concat("+model2.AdminRoleHasPermissionColumns.PermissionID+") permission_ids",
+			"group_concat("+model2.AdminPermissionColumns.PermissionName+") permission_names").
 		Joins("left join `"+adminRoleHasPermission.TableName()+"` on "+
 			adminRole.TableName()+"."+model2.AdminRoleColumns.ID+" = "+
 			adminRoleHasPermission.TableName()+"."+model2.AdminRoleHasPermissionColumns.RoleID).
+		Joins("left join `"+adminPermission.TableName()+"` on "+
+			adminPermission.TableName()+"."+model2.AdminPermissionColumns.ID+" = "+
+			adminRoleHasPermission.TableName()+"."+model2.AdminRoleHasPermissionColumns.PermissionID).
 		Where(adminRole.TableName()+"."+model2.AdminRoleColumns.ID+" in ?", idList).
 		Group(adminRole.TableName() + "." + model2.AdminRoleColumns.ID).
 		Find(&roleList).Error

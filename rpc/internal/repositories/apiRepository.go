@@ -6,6 +6,7 @@ import (
 	util2 "admin-user/rpc/internal/pkg/util"
 	user2 "admin-user/rpc/user"
 	"context"
+	"gorm.io/gorm/clause"
 	"strings"
 	"time"
 
@@ -45,13 +46,21 @@ func (a *apiRepository) PagingQuery(ctx context.Context, req *user2.GetApiReques
 	// 获取jwt中的平台id
 	platformId := util2.InterfaceToUint(ctx.Value("platformID"))
 
+	if len(req.Keyword) > 0 {
+		db = db.Where(model2.AdminAPIColumns.Name + " like '" + req.Keyword + "%' OR " + model2.AdminAPIColumns.HTTPPath + " like '" + req.Keyword + "%'")
+	}
+
 	// sql 逻辑
 	db = db.Model(model2.AdminAPI{}).Select(
 		model2.AdminAPIColumns.ID,
 		model2.AdminAPIColumns.Name,
 		model2.AdminAPIColumns.HTTPMethod,
+		model2.AdminAPIColumns.CreatedAt+" as createdat",
+		model2.AdminAPIColumns.UpdatedAt+" as updatedat",
 		model2.AdminAPIColumns.HTTPPath).
-		Where(model2.AdminAPIColumns.PlatformID+" = ?", platformId)
+		Where(model2.AdminAPIColumns.PlatformID+" = ?", platformId).
+		Where(model2.AdminAPIColumns.IsOpen+" = ?", 0).
+		Where(model2.AdminAPIColumns.IsSuper+" = ?", 0)
 	db.Count(&rsp.Total) // 统计条数
 	err = db.Scopes(PageDefault(int(req.CurrentPage), int(req.PageSize))).Find(&rsp.RowList).Error
 
@@ -65,8 +74,12 @@ func (a *apiRepository) FindApiByIdList(ctx context.Context, idList []string) (a
 
 	// sql 逻辑
 	err = db.Model(model2.AdminAPI{}).Select(model2.AdminAPIColumns.ID, model2.AdminAPIColumns.Name,
-		model2.AdminAPIColumns.HTTPPath, model2.AdminAPIColumns.HTTPMethod).
+		model2.AdminAPIColumns.HTTPPath, model2.AdminAPIColumns.HTTPMethod,
+		model2.AdminAPIColumns.CreatedAt+" as createdat",
+		model2.AdminAPIColumns.UpdatedAt+" as updatedat").
 		Where("id in ?", idList).Limit(DefaultLimit).
+		Where(model2.AdminAPIColumns.IsOpen+" = ?", 0).
+		Where(model2.AdminAPIColumns.IsSuper+" = ?", 0).
 		Find(&apiList).Error
 
 	return
@@ -85,6 +98,8 @@ func (a *apiRepository) AddApi(ctx context.Context, req *user2.AddApiRequest) (e
 		Name:       req.Name,
 		HTTPMethod: strings.ToUpper(req.HttpMethod),
 		HTTPPath:   req.HttpPath,
+		IsSuper:    int8(req.IsSuper),
+		IsOpen:     int8(req.IsOpen),
 		PlatformID: platformId,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
@@ -112,6 +127,8 @@ func (a *apiRepository) BatchAddApi(ctx context.Context, req *user2.AddBatchApiR
 			Name:       v.Name,
 			HTTPMethod: strings.ToUpper(v.HttpMethod),
 			HTTPPath:   v.HttpPath,
+			IsOpen:     int8(v.IsOpen),
+			IsSuper:    int8(v.IsSuper),
 			PlatformID: platformId,
 			CreatedAt:  time.Now(),
 			UpdatedAt:  time.Now(),
@@ -119,7 +136,7 @@ func (a *apiRepository) BatchAddApi(ctx context.Context, req *user2.AddBatchApiR
 	}
 
 	// sql 逻辑
-	err = db.CreateInBatches(data, total).Error
+	err = db.Clauses(clause.Insert{Modifier: "IGNORE"}).CreateInBatches(data, total).Error
 
 	return
 }

@@ -19,6 +19,19 @@ type (
         HttpMethod string `json:"httpMethod" valid:"in(GET|POST|PUT|DELETE),required" example:"get"`
         HttpPath   string `json:"httpPath" valid:"stringlength(1|255),required" example:"/api"`
     }
+    GetUserInfoRsp {
+        Id          int64  `json:"id"`
+        Account     string `json:"account"`
+        NickName    string `json:"nickName"`
+        Phone       string `json:"phone"`
+        Email       string `json:"email"`
+        PlatformID  int64  `json:"platformId"`
+        Createdat   string `json:"createdat"`
+        Updatedat   string `json:"updatedat"`
+    }
+    CheckPermissionRsp {
+        IsPass bool `json:"isPass"`
+    }
 
 )
 
@@ -34,6 +47,11 @@ service user {
     @handler loginOut
     post /v1/account/loginOut () returns ()
     @doc (
+        summary: "获取用户信息"
+    )
+    @handler getUserInfo
+    post /v1/account/getUserInfo () returns (GetUserInfoRsp)
+    @doc (
         summary: "修改密码"
     )
     @handler updatePassword
@@ -42,5 +60,5 @@ service user {
         summary: "api接口权限检验"
     )
     @handler checkPermission
-    post /v1/account/checkPermission (CheckPermissionReq) returns ()
+    post /v1/account/checkPermission (CheckPermissionReq) returns (CheckPermissionRsp)
 }

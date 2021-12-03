@@ -4,149 +4,155 @@
 package server
 
 import (
-	logic2 "admin-user/rpc/internal/logic"
-	svc2 "admin-user/rpc/internal/svc"
-	user2 "admin-user/rpc/user"
 	"context"
+
+	"admin-user/rpc/internal/logic"
+	"admin-user/rpc/internal/svc"
+	"admin-user/rpc/user"
 )
 
 type UserServer struct {
-	svcCtx *svc2.ServiceContext
+	svcCtx *svc.ServiceContext
 }
 
-func NewUserServer(svcCtx *svc2.ServiceContext) *UserServer {
+func NewUserServer(svcCtx *svc.ServiceContext) *UserServer {
 	return &UserServer{
 		svcCtx: svcCtx,
 	}
 }
 
 //  user
-func (s *UserServer) Login(ctx context.Context, in *user2.LoginRequest) (*user2.LoginResponse, error) {
-	l := logic2.NewLoginLogic(ctx, s.svcCtx)
+func (s *UserServer) Login(ctx context.Context, in *user.LoginRequest) (*user.LoginResponse, error) {
+	l := logic.NewLoginLogic(ctx, s.svcCtx)
 	return l.Login(in)
 }
 
 //  account
-func (s *UserServer) LoginOut(ctx context.Context, in *user2.LoginOutRequest) (*user2.LoginOutResponse, error) {
-	l := logic2.NewLoginOutLogic(ctx, s.svcCtx)
+func (s *UserServer) GetUserInfo(ctx context.Context, in *user.GetUserInfoRequest) (*user.GetUserInfoResponse, error) {
+	l := logic.NewGetUserInfoLogic(ctx, s.svcCtx)
+	return l.GetUserInfo(in)
+}
+
+func (s *UserServer) LoginOut(ctx context.Context, in *user.LoginOutRequest) (*user.LoginOutResponse, error) {
+	l := logic.NewLoginOutLogic(ctx, s.svcCtx)
 	return l.LoginOut(in)
 }
 
-func (s *UserServer) UpdatePassword(ctx context.Context, in *user2.UpdatePasswordRequest) (*user2.UpdatePasswordResponse, error) {
-	l := logic2.NewUpdatePasswordLogic(ctx, s.svcCtx)
+func (s *UserServer) UpdatePassword(ctx context.Context, in *user.UpdatePasswordRequest) (*user.UpdatePasswordResponse, error) {
+	l := logic.NewUpdatePasswordLogic(ctx, s.svcCtx)
 	return l.UpdatePassword(in)
 }
 
-func (s *UserServer) CheckPermission(ctx context.Context, in *user2.CheckPermissionRequest) (*user2.CheckPermissionResponse, error) {
-	l := logic2.NewCheckPermissionLogic(ctx, s.svcCtx)
+func (s *UserServer) CheckPermission(ctx context.Context, in *user.CheckPermissionRequest) (*user.CheckPermissionResponse, error) {
+	l := logic.NewCheckPermissionLogic(ctx, s.svcCtx)
 	return l.CheckPermission(in)
 }
 
 //  admin
-func (s *UserServer) GetAdmin(ctx context.Context, in *user2.GetAdminRequest) (*user2.GetAdminResponse, error) {
-	l := logic2.NewGetAdminLogic(ctx, s.svcCtx)
+func (s *UserServer) GetAdmin(ctx context.Context, in *user.GetAdminRequest) (*user.GetAdminResponse, error) {
+	l := logic.NewGetAdminLogic(ctx, s.svcCtx)
 	return l.GetAdmin(in)
 }
 
-func (s *UserServer) AddAdmin(ctx context.Context, in *user2.AddAdminRequest) (*user2.AddAdminResponse, error) {
-	l := logic2.NewAddAdminLogic(ctx, s.svcCtx)
+func (s *UserServer) AddAdmin(ctx context.Context, in *user.AddAdminRequest) (*user.AddAdminResponse, error) {
+	l := logic.NewAddAdminLogic(ctx, s.svcCtx)
 	return l.AddAdmin(in)
 }
 
-func (s *UserServer) EditAdmin(ctx context.Context, in *user2.EditAdminRequest) (*user2.EditAdminResponse, error) {
-	l := logic2.NewEditAdminLogic(ctx, s.svcCtx)
+func (s *UserServer) EditAdmin(ctx context.Context, in *user.EditAdminRequest) (*user.EditAdminResponse, error) {
+	l := logic.NewEditAdminLogic(ctx, s.svcCtx)
 	return l.EditAdmin(in)
 }
 
-func (s *UserServer) DeleteAdmin(ctx context.Context, in *user2.DeleteAdminRequest) (*user2.DeleteAdminResponse, error) {
-	l := logic2.NewDeleteAdminLogic(ctx, s.svcCtx)
+func (s *UserServer) DeleteAdmin(ctx context.Context, in *user.DeleteAdminRequest) (*user.DeleteAdminResponse, error) {
+	l := logic.NewDeleteAdminLogic(ctx, s.svcCtx)
 	return l.DeleteAdmin(in)
 }
 
-func (s *UserServer) FindAdminByIds(ctx context.Context, in *user2.FindAdminByIdsRequest) (*user2.FindAdminByIdsResponse, error) {
-	l := logic2.NewFindAdminByIdsLogic(ctx, s.svcCtx)
+func (s *UserServer) FindAdminByIds(ctx context.Context, in *user.FindAdminByIdsRequest) (*user.FindAdminByIdsResponse, error) {
+	l := logic.NewFindAdminByIdsLogic(ctx, s.svcCtx)
 	return l.FindAdminByIds(in)
 }
 
 //  role
-func (s *UserServer) GetRole(ctx context.Context, in *user2.GetRoleRequest) (*user2.GetRoleResponse, error) {
-	l := logic2.NewGetRoleLogic(ctx, s.svcCtx)
+func (s *UserServer) GetRole(ctx context.Context, in *user.GetRoleRequest) (*user.GetRoleResponse, error) {
+	l := logic.NewGetRoleLogic(ctx, s.svcCtx)
 	return l.GetRole(in)
 }
 
-func (s *UserServer) AddRole(ctx context.Context, in *user2.AddRoleRequest) (*user2.AddRoleResponse, error) {
-	l := logic2.NewAddRoleLogic(ctx, s.svcCtx)
+func (s *UserServer) AddRole(ctx context.Context, in *user.AddRoleRequest) (*user.AddRoleResponse, error) {
+	l := logic.NewAddRoleLogic(ctx, s.svcCtx)
 	return l.AddRole(in)
 }
 
-func (s *UserServer) EditRole(ctx context.Context, in *user2.EditRoleRequest) (*user2.EditRoleResponse, error) {
-	l := logic2.NewEditRoleLogic(ctx, s.svcCtx)
+func (s *UserServer) EditRole(ctx context.Context, in *user.EditRoleRequest) (*user.EditRoleResponse, error) {
+	l := logic.NewEditRoleLogic(ctx, s.svcCtx)
 	return l.EditRole(in)
 }
 
-func (s *UserServer) DeleteRole(ctx context.Context, in *user2.DeleteRoleRequest) (*user2.DeleteRoleResponse, error) {
-	l := logic2.NewDeleteRoleLogic(ctx, s.svcCtx)
+func (s *UserServer) DeleteRole(ctx context.Context, in *user.DeleteRoleRequest) (*user.DeleteRoleResponse, error) {
+	l := logic.NewDeleteRoleLogic(ctx, s.svcCtx)
 	return l.DeleteRole(in)
 }
 
-func (s *UserServer) FindRoleByIds(ctx context.Context, in *user2.FindRoleByIdsRequest) (*user2.FindRoleByIdsResponse, error) {
-	l := logic2.NewFindRoleByIdsLogic(ctx, s.svcCtx)
+func (s *UserServer) FindRoleByIds(ctx context.Context, in *user.FindRoleByIdsRequest) (*user.FindRoleByIdsResponse, error) {
+	l := logic.NewFindRoleByIdsLogic(ctx, s.svcCtx)
 	return l.FindRoleByIds(in)
 }
 
 //  permission
-func (s *UserServer) GetPermission(ctx context.Context, in *user2.GetPermissionRequest) (*user2.GetPermissionResponse, error) {
-	l := logic2.NewGetPermissionLogic(ctx, s.svcCtx)
+func (s *UserServer) GetPermission(ctx context.Context, in *user.GetPermissionRequest) (*user.GetPermissionResponse, error) {
+	l := logic.NewGetPermissionLogic(ctx, s.svcCtx)
 	return l.GetPermission(in)
 }
 
-func (s *UserServer) AddPermission(ctx context.Context, in *user2.AddPermissionRequest) (*user2.AddPermissionResponse, error) {
-	l := logic2.NewAddPermissionLogic(ctx, s.svcCtx)
+func (s *UserServer) AddPermission(ctx context.Context, in *user.AddPermissionRequest) (*user.AddPermissionResponse, error) {
+	l := logic.NewAddPermissionLogic(ctx, s.svcCtx)
 	return l.AddPermission(in)
 }
 
-func (s *UserServer) EditPermission(ctx context.Context, in *user2.EditPermissionRequest) (*user2.EditPermissionResponse, error) {
-	l := logic2.NewEditPermissionLogic(ctx, s.svcCtx)
+func (s *UserServer) EditPermission(ctx context.Context, in *user.EditPermissionRequest) (*user.EditPermissionResponse, error) {
+	l := logic.NewEditPermissionLogic(ctx, s.svcCtx)
 	return l.EditPermission(in)
 }
 
-func (s *UserServer) DeletePermission(ctx context.Context, in *user2.DeletePermissionRequest) (*user2.DeletePermissionResponse, error) {
-	l := logic2.NewDeletePermissionLogic(ctx, s.svcCtx)
+func (s *UserServer) DeletePermission(ctx context.Context, in *user.DeletePermissionRequest) (*user.DeletePermissionResponse, error) {
+	l := logic.NewDeletePermissionLogic(ctx, s.svcCtx)
 	return l.DeletePermission(in)
 }
 
-func (s *UserServer) FindPermissionByIds(ctx context.Context, in *user2.FindPermissionByIdsRequest) (*user2.FindPermissionByIdsResponse, error) {
-	l := logic2.NewFindPermissionByIdsLogic(ctx, s.svcCtx)
+func (s *UserServer) FindPermissionByIds(ctx context.Context, in *user.FindPermissionByIdsRequest) (*user.FindPermissionByIdsResponse, error) {
+	l := logic.NewFindPermissionByIdsLogic(ctx, s.svcCtx)
 	return l.FindPermissionByIds(in)
 }
 
 //  api
-func (s *UserServer) GetApi(ctx context.Context, in *user2.GetApiRequest) (*user2.GetApiResponse, error) {
-	l := logic2.NewGetApiLogic(ctx, s.svcCtx)
+func (s *UserServer) GetApi(ctx context.Context, in *user.GetApiRequest) (*user.GetApiResponse, error) {
+	l := logic.NewGetApiLogic(ctx, s.svcCtx)
 	return l.GetApi(in)
 }
 
-func (s *UserServer) AddApi(ctx context.Context, in *user2.AddApiRequest) (*user2.AddApiResponse, error) {
-	l := logic2.NewAddApiLogic(ctx, s.svcCtx)
+func (s *UserServer) AddApi(ctx context.Context, in *user.AddApiRequest) (*user.AddApiResponse, error) {
+	l := logic.NewAddApiLogic(ctx, s.svcCtx)
 	return l.AddApi(in)
 }
 
-func (s *UserServer) BatchApi(ctx context.Context, in *user2.AddBatchApiRequest) (*user2.AddBatchApiResponse, error) {
-	l := logic2.NewBatchApiLogic(ctx, s.svcCtx)
+func (s *UserServer) BatchApi(ctx context.Context, in *user.AddBatchApiRequest) (*user.AddBatchApiResponse, error) {
+	l := logic.NewBatchApiLogic(ctx, s.svcCtx)
 	return l.BatchApi(in)
 }
 
-func (s *UserServer) EditApi(ctx context.Context, in *user2.EditApiRequest) (*user2.EditApiResponse, error) {
-	l := logic2.NewEditApiLogic(ctx, s.svcCtx)
+func (s *UserServer) EditApi(ctx context.Context, in *user.EditApiRequest) (*user.EditApiResponse, error) {
+	l := logic.NewEditApiLogic(ctx, s.svcCtx)
 	return l.EditApi(in)
 }
 
-func (s *UserServer) DeleteApi(ctx context.Context, in *user2.DeleteApiRequest) (*user2.DeleteApiResponse, error) {
-	l := logic2.NewDeleteApiLogic(ctx, s.svcCtx)
+func (s *UserServer) DeleteApi(ctx context.Context, in *user.DeleteApiRequest) (*user.DeleteApiResponse, error) {
+	l := logic.NewDeleteApiLogic(ctx, s.svcCtx)
 	return l.DeleteApi(in)
 }
 
-func (s *UserServer) FindApiByIds(ctx context.Context, in *user2.FindApiByIdsRequest) (*user2.FindApiByIdsResponse, error) {
-	l := logic2.NewFindApiByIdsLogic(ctx, s.svcCtx)
+func (s *UserServer) FindApiByIds(ctx context.Context, in *user.FindApiByIdsRequest) (*user.FindApiByIdsResponse, error) {
+	l := logic.NewFindApiByIdsLogic(ctx, s.svcCtx)
 	return l.FindApiByIds(in)
 }

@@ -20,28 +20,27 @@ CREATE TABLE `admin_user` (
   `creater` int unsigned NOT NULL DEFAULT '0' COMMENT '创建者',
   `updater` int unsigned NOT NULL DEFAULT '0' COMMENT '更新者',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `phone_UNIQUE` (`phone`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
-  UNIQUE KEY `account_UNIQUE` (`account`),
-  KEY `created_at` (`created_at`) USING BTREE,
-  KEY `platform_id` (`platform_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理端-用户表'
+  UNIQUE KEY `phone_UNIQUE` (`platform_id`,`phone`),
+  UNIQUE KEY `email_UNIQUE` (`platform_id`,`email`),
+  UNIQUE KEY `account_UNIQUE` (`platform_id`,`account`),
+  KEY `created_at` (`created_at`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=266 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理端-用户表'
 ******sql******/
 // AdminUser 管理端-用户表
 type AdminUser struct {
 	ID           uint      `gorm:"primaryKey;column:id;type:int unsigned;not null" json:"id"`
-	Account      string    `gorm:"unique;column:account;type:varchar(255);not null" json:"account"`                                       // 账户名
-	Password     string    `gorm:"column:password;type:varchar(255);not null" json:"password"`                                            // 密码（哈希加盐）
-	NickName     string    `gorm:"column:nick_name;type:varchar(255);not null;default:无" json:"nickName"`                                 // 昵称
-	Phone        string    `gorm:"unique;column:phone;type:varchar(20);not null;default:无" json:"phone"`                                  // 手机号
-	Email        string    `gorm:"unique;column:email;type:varchar(255);not null;default:无" json:"email"`                                 // 电子邮箱
-	PlatformID   int64     `gorm:"index:platform_id;column:platform_id;type:int unsigned;not null;default:0" json:"platformId"`           // 平台id
-	IsSuperAdmin uint8     `gorm:"column:is_super_admin;type:tinyint unsigned;not null;default:0" json:"isSuperAdmin"`                    // 是否为超级管理员，0为false，1为true
-	IsBan        uint8     `gorm:"column:is_ban;type:tinyint unsigned;not null;default:0" json:"isBan"`                                   // 是否封禁  0  false  1 true
-	CreatedAt    time.Time `gorm:"index:created_at;column:created_at;type:timestamp;not null;default:CURRENT_TIMESTAMP" json:"createdAt"` // 创建时间
-	UpdatedAt    time.Time `gorm:"column:updated_at;type:timestamp;not null;default:CURRENT_TIMESTAMP" json:"updatedAt"`                  // 更新时间
-	Creater      uint      `gorm:"column:creater;type:int unsigned;not null;default:0" json:"creater"`                                    // 创建者
-	Updater      uint      `gorm:"column:updater;type:int unsigned;not null;default:0" json:"updater"`                                    // 更新者
+	Account      string    `gorm:"uniqueIndex:account_UNIQUE;column:account;type:varchar(255);not null" json:"account"`                                                                    // 账户名
+	Password     string    `gorm:"column:password;type:varchar(255);not null" json:"password"`                                                                                             // 密码（哈希加盐）
+	NickName     string    `gorm:"column:nick_name;type:varchar(255);not null;default:无" json:"nickName"`                                                                                  // 昵称
+	Phone        string    `gorm:"uniqueIndex:phone_UNIQUE;column:phone;type:varchar(20);not null;default:无" json:"phone"`                                                                 // 手机号
+	Email        string    `gorm:"uniqueIndex:email_UNIQUE;column:email;type:varchar(255);not null;default:无" json:"email"`                                                                // 电子邮箱
+	PlatformID   uint      `gorm:"uniqueIndex:phone_UNIQUE;uniqueIndex:email_UNIQUE;uniqueIndex:account_UNIQUE;column:platform_id;type:int unsigned;not null;default:0" json:"platformId"` // 平台id
+	IsSuperAdmin uint8     `gorm:"column:is_super_admin;type:tinyint unsigned;not null;default:0" json:"isSuperAdmin"`                                                                     // 是否为超级管理员，0为false，1为true
+	IsBan        uint8     `gorm:"column:is_ban;type:tinyint unsigned;not null;default:0" json:"isBan"`                                                                                    // 是否封禁  0  false  1 true
+	CreatedAt    time.Time `gorm:"index:created_at;column:created_at;type:timestamp;not null;default:CURRENT_TIMESTAMP" json:"createdAt"`                                                  // 创建时间
+	UpdatedAt    time.Time `gorm:"column:updated_at;type:timestamp;not null;default:CURRENT_TIMESTAMP" json:"updatedAt"`                                                                   // 更新时间
+	Creater      uint      `gorm:"column:creater;type:int unsigned;not null;default:0" json:"creater"`                                                                                     // 创建者
+	Updater      uint      `gorm:"column:updater;type:int unsigned;not null;default:0" json:"updater"`                                                                                     // 更新者
 }
 
 // TableName get sql table name.获取数据库表名

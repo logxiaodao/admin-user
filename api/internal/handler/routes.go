@@ -2,13 +2,14 @@
 package handler
 
 import (
-	svc2 "admin-user/api/internal/svc"
 	"net/http"
+
+	"admin-user/api/internal/svc"
 
 	"github.com/tal-tech/go-zero/rest"
 )
 
-func RegisterHandlers(engine *rest.Server, serverCtx *svc2.ServiceContext) {
+func RegisterHandlers(engine *rest.Server, serverCtx *svc.ServiceContext) {
 	engine.AddRoutes(
 		[]rest.Route{
 			{
@@ -27,6 +28,11 @@ func RegisterHandlers(engine *rest.Server, serverCtx *svc2.ServiceContext) {
 					Method:  http.MethodPost,
 					Path:    "/v1/account/loginOut",
 					Handler: loginOutHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/v1/account/getUserInfo",
+					Handler: getUserInfoHandler(serverCtx),
 				},
 				{
 					Method:  http.MethodPost,
@@ -161,7 +167,7 @@ func RegisterHandlers(engine *rest.Server, serverCtx *svc2.ServiceContext) {
 				},
 				{
 					Method:  http.MethodGet,
-					Path:    "/v1/auth/findPermissionByIds",
+					Path:    "/v1/auth/FindPermissionByIds",
 					Handler: FindPermissionByIdsHandler(serverCtx),
 				},
 				{

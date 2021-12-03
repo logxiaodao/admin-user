@@ -2,7 +2,7 @@ package main
 
 import (
 	test2 "admin-user/rpc/test"
-	"admin-user/rpc/user"
+	pb "admin-user/rpc/user"
 	"context"
 	"fmt"
 	"google.golang.org/grpc"
@@ -16,7 +16,7 @@ const (
 // 这里目前是手写的测试用例
 func main() {
 	// Set up a connection to the server.
-	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzYxODUzODIsImlhdCI6MTYzNjA5ODk4MiwiaXNTdXBlckFkbWluIjoxLCJwbGF0Zm9ybUlEIjoxLCJ1c2VySWQiOjF9.Sdui9-yCXVBQRqE8LwM4zZ_1VAIoEAlvrV1OrIYffJk"
+	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mzc3MjA2NjEsImlhdCI6MTYzNzYzNDI2MSwiaXNTdXBlckFkbWluIjowLCJwbGF0Zm9ybUlEIjoxLCJ1c2VySWQiOjMxfQ.-5zynM3otjY6XlMJkl5vB4H4vZIkzjeqN33uUa6YF1A"
 	//token   :=  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzYxODYyOTEsImlhdCI6MTYzNjA5OTg5MSwiaXNTdXBlckFkbWluIjowLCJwbGF0Zm9ybUlEIjoxLCJ1c2VySWQiOjMxfQ.axEkB_l9O9uUZmNCSmjFvV2gj_YX3dr5HcBQlmqL1PQ"
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithPerRPCCredentials(test2.AuthToekn{token}))
@@ -25,7 +25,7 @@ func main() {
 	}
 
 	defer conn.Close()
-	c := user.NewUserClient(conn)
+	c := pb.NewUserClient(conn)
 
 	// user
 	//data, err := c.Login(context.Background(), &pb.LoginRequest{
@@ -35,13 +35,15 @@ func main() {
 	//})
 
 	// account
+	data, err := c.GetUserInfo(context.Background(), &pb.GetUserInfoRequest{})
+
 	//data, err := c.LoginOut(context.Background(), &pb.LoginOutRequest{})
 
 	//data, err := c.UpdatePassword(context.Background(), &pb.UpdatePasswordRequest{OldPassword: "123456789", NewPassword: "12345678", ConfirmPassword: "12345678"})
 
-	ctx := context.WithValue(context.Background(), "authorization", token)
+	//ctx := context.WithValue(context.Background(), "authorization", token)
 
-	data, err := c.CheckPermission(ctx, &user.CheckPermissionRequest{HttpPath: "/v1/auth/permission", HttpMethod: "POST"})
+	//data, err := c.CheckPermission(ctx, &user.CheckPermissionRequest{HttpPath: "/v1/auth/permission", HttpMethod: "POST"})
 
 	// api
 	//data, err := c.GetApi(context.Background(), &pb.GetApiRequest{CurrentPage: 1, PageSize: 10})

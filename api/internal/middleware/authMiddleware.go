@@ -30,8 +30,8 @@ func (m *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		}
 
 		// 判读是否公共接口
-		for _, v := range config2.SecurityApiData {
-			if v.HTTPPath == r.RequestURI && v.HTTPMethod == r.Method {
+		for _, v := range config2.InitRouteData.Data {
+			if v.HTTPPath == r.RequestURI && v.HTTPMethod == r.Method && v.IsOpen == 1 {
 				next(w, r)
 			}
 		}

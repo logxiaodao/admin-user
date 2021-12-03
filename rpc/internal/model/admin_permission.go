@@ -15,7 +15,7 @@ CREATE TABLE `admin_permission` (
   `updater` int unsigned NOT NULL DEFAULT '0' COMMENT '更新者',
   PRIMARY KEY (`id`),
   UNIQUE KEY `permission_name` (`platform_id`,`permission_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理端-权限表'
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理端-权限表'
 ******sql******/
 // AdminPermission 管理端-权限表
 type AdminPermission struct {

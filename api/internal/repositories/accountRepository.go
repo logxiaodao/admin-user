@@ -115,6 +115,17 @@ func (a *accountRepository) CheckPermission(ctx context.Context, userId uint, ht
 		if total > 0 {
 			return true, nil
 		}
+	} else { // 开放接口直接过
+		err = db.Model(model2.AdminAPI{}).
+			Where(model2.AdminAPIColumns.PlatformID+" in ? ", []int64{int64(adminUser.PlatformID), config2.InitRouteData.PlatformId}).
+			Where(model2.AdminAPIColumns.HTTPPath+" = ? ", httpPath).
+			Where(model2.AdminAPIColumns.HTTPMethod+" = ? ", httpMethod).
+			Where(model2.AdminAPIColumns.IsOpen+" = ? ", 1).
+			Where(model2.AdminAPIColumns.IsSuper+" = ? ", 0).
+			Count(&total).Error
+		if total > 0 {
+			return true, nil
+		}
 	}
 
 	// 找出该用户的所有权限  拆成两次查询(每次连表不超过三张)

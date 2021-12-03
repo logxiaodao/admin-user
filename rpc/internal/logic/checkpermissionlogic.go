@@ -41,8 +41,8 @@ func (l *CheckPermissionLogic) CheckPermission(in *user2.CheckPermissionRequest)
 	}
 
 	// 判读是否公共接口
-	for _, v := range config.SecurityApiData {
-		if v.HTTPPath == in.HttpPath && v.HTTPMethod == in.HttpMethod {
+	for _, v := range config.InitRouteData.Data {
+		if v.HTTPPath == in.HttpPath && v.HTTPMethod == in.HttpMethod && v.IsOpen == 1 {
 			return &user2.CheckPermissionResponse{Status: true}, nil
 		}
 	}

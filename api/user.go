@@ -1,20 +1,19 @@
 package main
 
 import (
-	errorx2 "admin-user/api/common/errorx"
 	Initialization2 "admin-user/api/internal/Initialization"
 	config2 "admin-user/api/internal/config"
 	handler2 "admin-user/api/internal/handler"
 	middleware2 "admin-user/api/internal/middleware"
 	svc2 "admin-user/api/internal/svc"
+	errorx2 "admin-user/rpc/common/errorx"
 	"flag"
 	"fmt"
+	"github.com/tal-tech/go-zero/core/conf"
 	"github.com/tal-tech/go-zero/core/logx"
+	"github.com/tal-tech/go-zero/rest"
 	"github.com/tal-tech/go-zero/rest/httpx"
 	"net/http"
-
-	"github.com/tal-tech/go-zero/core/conf"
-	"github.com/tal-tech/go-zero/rest"
 )
 
 var configFile = flag.String("f", "etc/dev.yaml", "the config file")

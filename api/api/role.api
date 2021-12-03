@@ -13,6 +13,7 @@ type (
     GetRoleReq {
         CurrentPage int `form:"currentPage" valid:"range(1|2147483647),required" example:"1"`
         PageSize    int `form:"pageSize" valid:"in(1|10|20|50|100),required" example:"10"`
+        Keyword     string  `form:"keyword" valid:"optional" example:"test"`
     }
     GetRoleRsp {
         Total    int64         `json:"total"`
@@ -22,6 +23,9 @@ type (
         Id              uint         `json:"id"`
         RoleName        string       `json:"roleName"`
         PermissionIds   string       `json:"permissionIds"`
+        PermissionNames string       `json:"permissionNames"`
+        Createdat       string       `json:"createdat"`
+        Updatedat       string       `json:"updatedat"`
     }
 
     FindRoleByIdsReq {

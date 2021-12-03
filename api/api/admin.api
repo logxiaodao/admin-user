@@ -11,8 +11,9 @@ info(
 
 type (
     GetAdminReq {
-        CurrentPage int `form:"currentPage" valid:"range(1|2147483647),required" example:"1"`
-        PageSize    int `form:"pageSize" valid:"in(1|10|20|50|100),required" example:"10"`
+        CurrentPage int     `form:"currentPage" valid:"range(1|2147483647),required" example:"1"`
+        PageSize    int     `form:"pageSize" valid:"in(1|10|20|50|100),required" example:"10"`
+        Keyword     string  `form:"keyword" valid:"optional" example:"test"`
     }
     GetAdminRsp {
         Total    int64         `json:"total"`
@@ -25,6 +26,9 @@ type (
         Phone           string      `json:"phone"`
         Email           string      `json:"email"`
         RoleIds         string      `json:"roleIds"`
+        RoleNames       string      `json:"roleNames"`
+        Createdat       string      `json:"createdat"`
+        Updatedat       string      `json:"updatedat"`
     }
 
     FindAdminByIdsReq {

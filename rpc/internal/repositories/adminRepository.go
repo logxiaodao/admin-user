@@ -42,6 +42,7 @@ func (a *adminRepository) PagingQuery(ctx context.Context, req *user2.GetAdminRe
 	db := a.db.WithContext(ctx)
 
 	var (
+		adminRole        model2.AdminRole
 		adminUser        model2.AdminUser
 		adminUserHasRole model2.AdminUserHasRole
 	)
@@ -51,7 +52,15 @@ func (a *adminRepository) PagingQuery(ctx context.Context, req *user2.GetAdminRe
 
 	// sql 逻辑
 	db = db.Table(adminUser.TableName()).
-		Where(adminUser.TableName()+"."+model2.AdminUserColumns.PlatformID+"=?", platformId)
+		Where(adminUser.TableName()+"."+model2.AdminUserColumns.PlatformID+"=?", platformId).
+		Where(adminUser.TableName() + "." + model2.AdminUserColumns.IsSuperAdmin + "=0")
+
+	if len(req.Keyword) > 0 {
+		db = db.Where(model2.AdminUserColumns.Account + " like '" + req.Keyword + "%' OR " +
+			model2.AdminUserColumns.NickName + " like '" + req.Keyword + "%' OR " +
+			model2.AdminUserColumns.Email + " like '" + req.Keyword + "%' OR " +
+			model2.AdminUserColumns.Phone + " like '" + req.Keyword + "%'")
+	}
 
 	err = db.Count(&rsp.Total).Error
 	if err != nil {
@@ -64,10 +73,16 @@ func (a *adminRepository) PagingQuery(ctx context.Context, req *user2.GetAdminRe
 		"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.NickName+") "+model2.AdminUserColumns.NickName,
 		"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.Phone+") "+model2.AdminUserColumns.Phone,
 		"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.Email+") "+model2.AdminUserColumns.Email,
-		"group_concat("+model2.AdminUserHasRoleColumns.RoleID+") role_ids").
+		"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.CreatedAt+") as createdat",
+		"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.UpdatedAt+") as updatedat",
+		"group_concat("+model2.AdminUserHasRoleColumns.RoleID+") role_ids",
+		"group_concat("+model2.AdminRoleColumns.RoleName+") role_names").
 		Joins("left join " + adminUserHasRole.TableName() + " on " +
 			adminUser.TableName() + "." + model2.AdminUserColumns.ID + "=" +
 			adminUserHasRole.TableName() + "." + model2.AdminUserHasRoleColumns.UserID).
+		Joins("left join " + adminRole.TableName() + " on " +
+			adminRole.TableName() + "." + model2.AdminRoleColumns.ID + "=" +
+			adminUserHasRole.TableName() + "." + model2.AdminUserHasRoleColumns.RoleID).
 		Group(adminUser.TableName() + "." + model2.AdminUserColumns.ID).
 		Scopes(PageDefault(int(req.CurrentPage), int(req.PageSize))).Find(&rsp.RowList).Error
 
@@ -80,6 +95,7 @@ func (a *adminRepository) FindAdminByIdList(ctx context.Context, idList []string
 	db := a.db.WithContext(ctx)
 
 	var (
+		adminRole        model2.AdminRole
 		adminUser        model2.AdminUser
 		adminUserHasRole model2.AdminUserHasRole
 	)
@@ -92,10 +108,16 @@ func (a *adminRepository) FindAdminByIdList(ctx context.Context, idList []string
 			"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.NickName+") "+model2.AdminUserColumns.NickName,
 			"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.Phone+") "+model2.AdminUserColumns.Phone,
 			"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.Email+") "+model2.AdminUserColumns.Email,
-			"group_concat("+model2.AdminUserHasRoleColumns.RoleID+") role_ids").
+			"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.CreatedAt+") as createdat",
+			"any_value("+adminUser.TableName()+"."+model2.AdminUserColumns.UpdatedAt+") as updatedat",
+			"group_concat("+model2.AdminUserHasRoleColumns.RoleID+") role_ids",
+			"group_concat("+model2.AdminRoleColumns.RoleName+") role_names").
 		Joins("left join "+adminUserHasRole.TableName()+" on "+
 			adminUser.TableName()+"."+model2.AdminUserColumns.ID+"="+
 			adminUserHasRole.TableName()+"."+model2.AdminUserHasRoleColumns.UserID).
+		Joins("left join "+adminRole.TableName()+" on "+
+			adminRole.TableName()+"."+model2.AdminRoleColumns.ID+"="+
+			adminUserHasRole.TableName()+"."+model2.AdminUserHasRoleColumns.RoleID).
 		Where(adminUser.TableName()+"."+model2.AdminUserColumns.ID+" in ?", idList).
 		Group(adminUser.TableName() + "." + model2.AdminUserColumns.ID).
 		Find(&userList).Error
@@ -125,13 +147,14 @@ func (a *adminRepository) AddAdmin(ctx context.Context, req *user2.AddAdminReque
 	var (
 		adminUserHasRoles []model2.AdminUserHasRole
 		adminUser         = model2.AdminUser{
-			Account:    req.Account,
-			Password:   pwd,
-			NickName:   req.NickName,
-			Phone:      req.Phone,
-			Email:      req.Email,
-			PlatformID: int64(platformId),
-			Creater:    userId,
+			Account:      req.Account,
+			Password:     pwd,
+			NickName:     req.NickName,
+			Phone:        req.Phone,
+			Email:        req.Email,
+			PlatformID:   platformId,
+			Creater:      userId,
+			IsSuperAdmin: 0,
 		}
 	)
 

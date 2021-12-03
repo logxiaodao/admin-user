@@ -112,3 +112,59 @@ func InterfaceToInt64(val interface{}) (value int64) {
 
 	return
 }
+
+// InterfaceToString 失败会返回""
+func InterfaceToString(val interface{}) (value string) {
+
+	switch val.(type) {
+	case int:
+		v, _ := val.(int)
+		value = strconv.Itoa(v)
+		break
+	case int8:
+		v, _ := val.(int8)
+		value = strconv.Itoa(int(v))
+		break
+	case int32:
+		v, _ := val.(int32)
+		value = strconv.Itoa(int(v))
+		break
+	case int64:
+		v, _ := val.(int64)
+		value = strconv.Itoa(int(v))
+		break
+	case uint8:
+		v, _ := val.(uint8)
+		value = strconv.Itoa(int(v))
+		break
+	case uint32:
+		v, _ := val.(uint32)
+		value = strconv.Itoa(int(v))
+		break
+	case uint64:
+		v, _ := val.(uint64)
+		value = strconv.Itoa(int(v))
+		break
+	case float64:
+		v, _ := val.(float64)
+		value = strconv.Itoa(int(v))
+		break
+	case float32:
+		v, _ := val.(float32)
+		value = strconv.Itoa(int(v))
+		break
+	case string:
+		v, _ := val.(string)
+		value = v
+		break
+	case json.Number:
+		v, _ := val.(json.Number)
+		value = string(v)
+		break
+	default:
+		value = string("")
+		break
+	}
+
+	return
+}

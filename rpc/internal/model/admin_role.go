@@ -15,7 +15,7 @@ CREATE TABLE `admin_role` (
   `updater` int unsigned NOT NULL DEFAULT '0' COMMENT '更新者',
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_name` (`platform_id`,`role_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理端-角色表'
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理端-角色表'
 ******sql******/
 // AdminRole 管理端-角色表
 type AdminRole struct {

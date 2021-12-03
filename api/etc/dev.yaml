@@ -12,8 +12,8 @@ CpuThreshold: 900     # cpu降载阈值，默认900，可允许设置范围0到1
 #Signature:  # 签名配置
 Mysql:
   Name: laihua_user     # db name
-  Addr: docker.for.mac.host.internal:3306  # db 地址  docker 跑
-#  Addr: 127.0.0.1:3306  # db 地址 本地跑
+#  Addr: docker.for.mac.host.internal:3306  # db 地址  docker 跑
+  Addr: 127.0.0.1:3306  # db 地址 本地跑
   UserName: root        # 用户名
   Password: "123456"      # 密码
   ShowLog: true         # 是否打印SQL日志
@@ -21,8 +21,8 @@ Mysql:
   MaxOpenConn: 60       # 最大打开的连接数
   ConnMaxLifeTime: 60   # 连接重用的最大时间，单位分钟
 Redis: # 缓存
-  Addr: docker.for.mac.host.internal:6379   # docker 跑
-#  Addr: 127.0.0.1:6379 # 本地跑
+#  Addr: docker.for.mac.host.internal:6379   # docker 跑
+  Addr: 127.0.0.1:6379 # 本地跑
   Password: "123456"
   DB: 0
   DialTimeOut: 60s
@@ -42,7 +42,7 @@ Log: # 日志配置
   KeepDays: 30              # 日志保留天数
   StackCooldownMillis: 100  # 日志输出间隔 单位:毫秒
 Prometheus: # 服务指标监控
-  Host: docker.for.mac.host.internal # docker 跑
-#  Host: 127.0.0.1 本地跑
+#  Host: docker.for.mac.host.internal # docker 跑
+  Host: 127.0.0.1 本地跑
   Port: 9091
   Path: /metrics

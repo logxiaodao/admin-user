@@ -24,6 +24,19 @@ func loginOutHandler(ctx *svc2.ServiceContext) http.HandlerFunc {
 	}
 }
 
+func getUserInfoHandler(ctx *svc2.ServiceContext) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		l := logic2.NewAccountLogic(r.Context(), ctx)
+		resp, err := l.GetUserInfo(r.Header.Get("Authorization"))
+		if err != nil {
+			httpx.Error(w, errorx2.SendServiceError(errorx2.DefaultCodeMessage[errorx2.IncorrectToken]))
+		} else {
+			httpx.OkJson(w, errorx2.SendSuccess(resp))
+		}
+	}
+}
+
 func updatePasswordHandler(ctx *svc2.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types2.UpdatePasswordReq
@@ -59,13 +72,15 @@ func updatePasswordHandler(ctx *svc2.ServiceContext) http.HandlerFunc {
 func checkPermissionHandler(ctx *svc2.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types2.CheckPermissionReq
-		if err := httpx.Parse(r, &req); err != nil {
+		err := httpx.ParseJsonBody(r, &req)
+		if err != nil {
 			httpx.Error(w, errorx2.SendDatabaseError(errorx2.CodeMessage[errorx2.ParameterBindingFailed]))
 
 			return
 		}
+
 		// 根据配置规则验证请求参数
-		_, err := govalidator.ValidateStruct(req)
+		_, err = govalidator.ValidateStruct(req)
 		if err != nil {
 			httpx.Error(w, errorx2.SendParameterError(errorx2.Msg{
 				En: err.Error(),

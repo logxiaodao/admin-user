@@ -6,6 +6,7 @@ import (
 	util2 "admin-user/api/internal/pkg/util"
 	types2 "admin-user/api/internal/types"
 	"context"
+	"gorm.io/gorm/clause"
 	"strings"
 	"time"
 
@@ -45,13 +46,21 @@ func (a *apiRepository) PagingQuery(ctx context.Context, req types2.GetApiReq) (
 	// 获取jwt中的平台id
 	platformId := util2.InterfaceToUint(ctx.Value("platformID"))
 
+	if len(req.Keyword) > 0 {
+		db = db.Where(model2.AdminAPIColumns.Name + " like '" + req.Keyword + "%' OR " + model2.AdminAPIColumns.HTTPPath + " like '" + req.Keyword + "%'")
+	}
+
 	// sql 逻辑
 	db = db.Model(model2.AdminAPI{}).Select(
 		model2.AdminAPIColumns.ID,
 		model2.AdminAPIColumns.Name,
 		model2.AdminAPIColumns.HTTPMethod,
+		model2.AdminAPIColumns.CreatedAt+" as createdat",
+		model2.AdminAPIColumns.UpdatedAt+" as updatedat",
 		model2.AdminAPIColumns.HTTPPath).
-		Where(model2.AdminAPIColumns.PlatformID+" = ?", platformId)
+		Where(model2.AdminAPIColumns.PlatformID+" = ?", platformId).
+		Where(model2.AdminAPIColumns.IsOpen+" = ?", 0).
+		Where(model2.AdminAPIColumns.IsSuper+" = ?", 0)
 	db.Count(&rsp.Total) // 统计条数
 	err = db.Scopes(PageDefault(req.CurrentPage, req.PageSize)).Find(&rsp.RowList).Error
 
@@ -65,8 +74,12 @@ func (a *apiRepository) FindApiByIdList(ctx context.Context, idList []string) (a
 
 	// sql 逻辑
 	err = db.Model(model2.AdminAPI{}).Select(model2.AdminAPIColumns.ID, model2.AdminAPIColumns.Name,
-		model2.AdminAPIColumns.HTTPPath, model2.AdminAPIColumns.HTTPMethod).
+		model2.AdminAPIColumns.HTTPPath, model2.AdminAPIColumns.HTTPMethod,
+		model2.AdminAPIColumns.CreatedAt+" as createdat",
+		model2.AdminAPIColumns.UpdatedAt+" as updatedat").
 		Where("id in ?", idList).Limit(DefaultLimit).
+		Where(model2.AdminAPIColumns.IsOpen+" = ?", 0).
+		Where(model2.AdminAPIColumns.IsSuper+" = ?", 0).
 		Find(&apiList).Error
 
 	return
@@ -119,7 +132,7 @@ func (a *apiRepository) BatchAddApi(ctx context.Context, req types2.BatchPostApi
 	}
 
 	// sql 逻辑
-	err = db.CreateInBatches(data, total).Error
+	err = db.Clauses(clause.Insert{Modifier: "IGNORE"}).CreateInBatches(data, total).Error
 
 	return
 }

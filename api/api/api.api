@@ -10,8 +10,9 @@ info(
 
 type (
 	GetApiReq {
-		CurrentPage int  `form:"currentPage" valid:"range(1|2147483647),required" example:"1"`
-		PageSize    int  `form:"pageSize" valid:"in(1|10|20|50|100),required" example:"10"`
+		CurrentPage int  	`form:"currentPage" valid:"range(1|2147483647),required" example:"1"`
+		PageSize    int  	`form:"pageSize" valid:"in(1|10|20|50|100),required" example:"10"`
+		Keyword     string  `form:"keyword" valid:"optional" example:"test"`
 	}
 	GetApiRsp {
 		Total   int64     `json:"total"`
@@ -22,6 +23,8 @@ type (
 		Name       string `json:"name"`
 		HttpMethod string `json:"httpMethod"`
 		HttpPath   string `json:"httpPath"`
+		Createdat  string `json:"createdat"`
+		Updatedat  string `json:"updatedat"`
 	}
 
 	FindApiByIdsReq {

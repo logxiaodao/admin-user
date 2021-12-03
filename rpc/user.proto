@@ -45,6 +45,18 @@ message CheckPermissionResponse {
     bool status = 1;
 }
 
+// 查询用户信息
+message GetUserInfoRequest {}
+message GetUserInfoResponse {
+    uint64 id = 1;
+    string account = 2;
+    string nickName = 3;
+    string phone = 4;
+    string email = 5;
+    string platformId = 6;
+    string createdat = 7;
+    string updatedat = 8;
+}
 
 // admin
 message AdminInfo {
@@ -54,12 +66,16 @@ message AdminInfo {
     string phone = 4;
     string email = 5;
     string roleIds = 6;
+    string roleNames = 7;
+    string createdat = 8;
+    string updatedat = 9;
 }
 
 // 分页获取管理员列表
 message GetAdminRequest {
     int64 currentPage = 1;
     int64 pageSize = 2;
+    string keyword = 3;
 }
 message GetAdminResponse {
     int64 total = 1;
@@ -113,12 +129,16 @@ message RoleInfo {
     uint64 id = 1;
     string roleName = 2;
     string permissionIds = 3;
+    string permissionNames = 4;
+    string createdat = 5;
+    string updatedat = 6;
 }
 
 // 分页获取角色列表
 message GetRoleRequest {
     int64 currentPage = 1;
     int64 pageSize = 2;
+    string keyword = 3;
 }
 message GetRoleResponse {
     int64 total = 1;
@@ -166,12 +186,16 @@ message PermissionInfo {
     uint64 id = 1;
     string permissionName = 2;
     string apiIds = 3;
+    string apiNames = 4;
+    string createdat = 5;
+    string updatedat = 6;
 }
 
 // 分页获取权限列表
 message GetPermissionRequest {
     int64 currentPage = 1;
     int64 pageSize = 2;
+    string keyword = 3;
 }
 message GetPermissionResponse {
     int64 total = 1;
@@ -219,12 +243,15 @@ message ApiInfo {
     string name = 2;
     string httpMethod = 3;
     string httpPath = 4;
+    string createdat = 5;
+    string updatedat = 6;
 }
 
 // 分页获取api列表
 message GetApiRequest {
-    int64 currentPage = 1;
-    int64 pageSize = 2;
+    int64  currentPage = 1;
+    int64  pageSize = 2;
+    string keyword = 3;
 }
 message GetApiResponse {
     int64 total = 1;
@@ -244,6 +271,8 @@ message AddApiRequest {
     string name = 1;
     string httpMethod = 2;
     string httpPath = 3;
+    int32 isOpen = 4;
+    int32 isSuper = 5;
 }
 message AddApiResponse {
     bool status = 1;
@@ -281,6 +310,7 @@ service User {
     // user
     rpc login(LoginRequest) returns (LoginResponse);
     // account
+    rpc getUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
     rpc loginOut(LoginOutRequest) returns (LoginOutResponse);
     rpc updatePassword(UpdatePasswordRequest) returns (UpdatePasswordResponse);
     rpc checkPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
